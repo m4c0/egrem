@@ -3,6 +3,7 @@
 layout(location = 0) in vec2 frag_pos;
 
 layout(location = 0) out vec4 frag_colour;
+layout(location = 1) out vec4 frag_id;
 
 float sd_box(vec2 p, vec2 b) {
   vec2 d = abs(p) - b;
@@ -44,4 +45,5 @@ void main() {
   vec3 c = inigo_debug(d);
 
   frag_colour = vec4(c, 1.0);
+  frag_id = vec4(0);
 }
