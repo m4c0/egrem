@@ -13,10 +13,15 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
 }
 
 vec2 op_rep(vec2 p) {
+  const float s = 1.0;
+
   p = p * 5.0;
-  p = p - 0.5;
-  p = p - round(p);
-  return p;
+
+  vec2 id = round(p / s);
+  id = clamp(id, 0 - 2, 4.0 - 2);
+
+  vec2 r = p - s * id;
+  return r;
 }
 
 vec3 inigo_debug(float d) {
