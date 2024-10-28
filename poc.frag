@@ -13,12 +13,13 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
 }
 
 vec2 op_rep(vec2 p) {
-  const float s = 1.0;
+  const float count = 9; // number of squares
+  const float s = 1.0; // size of each square
 
-  p = p * 5.0;
+  p = p * 5.0 + (count - 1) / 2.0;
 
   vec2 id = round(p / s);
-  id = clamp(id, 0 - 2, 4.0 - 2);
+  id = clamp(id, 0, count - 1);
 
   vec2 r = p - s * id;
   return r;
