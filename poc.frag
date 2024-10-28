@@ -13,7 +13,7 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
   return sd_box(p, b) - r;
 }
 
-vec2 op_rep(vec2 p) {
+vec4 op_rep(vec2 p) {
   const float count = 9; // number of squares
   const float s = 1.0; // size of each square
 
@@ -23,7 +23,7 @@ vec2 op_rep(vec2 p) {
   id = clamp(id, 0, count - 1);
 
   vec2 r = p - s * id;
-  return r;
+  return vec4(r, id);
 }
 
 vec3 inigo_debug(float d) {
@@ -40,10 +40,11 @@ vec3 inigo_debug(float d) {
 void main() {
   vec2 p = frag_pos;
 
-  float d = sd_rnd_box(op_rep(p), vec2(0.3), 0.1);
+  vec4 pp = op_rep(p);
+  float d = sd_rnd_box(pp.xy, vec2(0.3), 0.1);
 
   vec3 c = inigo_debug(d);
 
   frag_colour = vec4(c, 1.0);
-  frag_id = vec4(0);
+  frag_id = vec4(pp.zw / 256.0, 0, 1);
 }

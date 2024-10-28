@@ -3,6 +3,7 @@
 #pragma leco add_shader "poc.vert"
 
 import casein;
+import silog;
 import vee;
 import voo;
 
@@ -58,8 +59,9 @@ struct thread : voo::casein_thread {
           cbuf.cmd_copy_to_host(*scb, { mx, my }, { 1, 1 }, hbuf.buffer());
         });
 
-        // auto mem = hbuf.map();
-        // auto pick = static_cast<unsigned char *>(*mem);
+        auto mem = hbuf.map();
+        auto pick = static_cast<unsigned char *>(*mem);
+        silog::log(silog::info, "%d %d", pick[0], pick[1]);
       });
     }
   }
