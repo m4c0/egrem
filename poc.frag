@@ -15,7 +15,9 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
 void main() {
   vec2 p = frag_pos;
 
-  float d = sd_rnd_box(p, vec2(0.1), 0.1);
+  p = p * 5.0;
+  p = p - round(p);
+  float d = sd_rnd_box(p, vec2(0.3), 0.1);
   d = 1 - step(0, d);
   
   frag_colour = vec4(d, 0.2, 0.3, 1.0);
