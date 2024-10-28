@@ -3,11 +3,12 @@
 #pragma leco add_shader "poc.vert"
 
 import casein;
-import silog;
+import dotz;
 import vee;
 import voo;
 
 struct upc {
+  dotz::vec2 selection;
   float aspect;
 };
 
@@ -54,14 +55,15 @@ struct thread : voo::casein_thread {
           vee::cmd_push_vert_frag_constants(*scb, *pl, &pc);
           oqr.run(*scb, sw.extent());
 
-          int mx = casein::mouse_pos.x;
-          int my = casein::mouse_pos.y;
+          // TODO: detect retina displays
+          int mx = casein::mouse_pos.x * 2.0;
+          int my = casein::mouse_pos.y * 2.0;
           cbuf.cmd_copy_to_host(*scb, { mx, my }, { 1, 1 }, hbuf.buffer());
         });
 
         auto mem = hbuf.map();
         auto pick = static_cast<unsigned char *>(*mem);
-        silog::log(silog::info, "%d %d", pick[0], pick[1]);
+        pc.selection = { pick[0], pick[1] };
       });
     }
   }

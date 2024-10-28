@@ -1,6 +1,7 @@
 #version 450
 
 layout(push_constant) uniform upc {
+  vec2 selection;
   float aspect;
 } pc;
 

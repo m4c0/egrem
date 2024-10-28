@@ -1,5 +1,10 @@
 #version 450
 
+layout(push_constant) uniform upc {
+  vec2 selection;
+  float aspect;
+} pc;
+
 layout(location = 0) in vec2 frag_pos;
 
 layout(location = 0) out vec4 frag_colour;
@@ -43,7 +48,9 @@ void main() {
   vec4 pp = op_rep(p);
   float d = sd_rnd_box(pp.xy, vec2(0.3), 0.1);
 
-  vec3 c = inigo_debug(d);
+  bool eq = length(abs(pp.zw - pc.selection)) < 0.01;
+
+  vec3 c = eq ? vec3(1) : inigo_debug(d);
 
   frag_colour = vec4(c, 1.0);
   frag_id = vec4(pp.zw / 256.0, 0, 1);
