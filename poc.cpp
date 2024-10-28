@@ -55,9 +55,8 @@ struct thread : voo::casein_thread {
           vee::cmd_push_vert_frag_constants(*scb, *pl, &pc);
           oqr.run(*scb, sw.extent());
 
-          // TODO: detect retina displays
-          int mx = casein::mouse_pos.x * 2.0;
-          int my = casein::mouse_pos.y * 2.0;
+          int mx = casein::mouse_pos.x * casein::screen_scale_factor;
+          int my = casein::mouse_pos.y * casein::screen_scale_factor;
           cbuf.cmd_copy_to_host(*scb, { mx, my }, { 1, 1 }, hbuf.buffer());
         });
 
