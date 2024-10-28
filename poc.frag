@@ -48,10 +48,10 @@ void main() {
   vec4 pp = op_rep(p);
   float d = sd_rnd_box(pp.xy, vec2(0.3), 0.1);
 
-  bool eq = length(abs(pp.zw - pc.selection)) < 0.01;
+  bool eq = d < 0 && length(abs(pp.zw - pc.selection)) < 0.01;
 
   vec3 c = eq ? vec3(1) : inigo_debug(d);
 
   frag_colour = vec4(c, 1.0);
-  frag_id = vec4(pp.zw / 256.0, 0, 1);
+  frag_id = vec4(pp.zw / 256.0, 0, d < 0);
 }

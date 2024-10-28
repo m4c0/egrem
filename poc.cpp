@@ -62,7 +62,8 @@ struct thread : voo::casein_thread {
 
         auto mem = hbuf.map();
         auto pick = static_cast<unsigned char *>(*mem);
-        pc.selection = { pick[0], pick[1] };
+        if (pick[3]) pc.selection = { pick[0], pick[1] };
+        else pc.selection = { 255, 255 };
       });
     }
   }
