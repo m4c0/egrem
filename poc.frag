@@ -12,6 +12,13 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
   return sd_box(p, b) - r;
 }
 
+vec2 op_rep(vec2 p) {
+  p = p * 5.0;
+  p = p - 0.5;
+  p = p - round(p);
+  return p;
+}
+
 vec3 inigo_debug(float d) {
   // this is 2.0 / resolution.y in Shader Toy. Impacts wave length.
   const float px = 2.0 / 600.0;
@@ -26,9 +33,7 @@ vec3 inigo_debug(float d) {
 void main() {
   vec2 p = frag_pos;
 
-  p = p * 5.0;
-  p = p - round(p);
-  float d = sd_rnd_box(p, vec2(0.3), 0.1);
+  float d = sd_rnd_box(op_rep(p), vec2(0.3), 0.1);
 
   vec3 c = inigo_debug(d);
 
