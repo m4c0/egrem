@@ -11,7 +11,7 @@ struct upc {
   dotz::vec2 drag_origin { 255, 255 };
   dotz::vec2 selection { 255, 255 };
   float aspect;
-};
+} g_pc;
 
 struct thread : voo::casein_thread {
   void run() override {
@@ -20,8 +20,6 @@ struct thread : voo::casein_thread {
     auto s = dq.surface();
 
     constexpr const auto fmt = vee::image_format_rgba_unorm;
-
-    upc pc {};
 
     while (!interrupted()) {
       auto rp = vee::create_render_pass({{
@@ -39,7 +37,7 @@ struct thread : voo::casein_thread {
       }};
 
       voo::swapchain_and_stuff sw { dq, *rp, {{ cbuf.image_view() }} };
-      pc.aspect = sw.aspect();
+      g_pc.aspect = sw.aspect();
 
       extent_loop(dq.queue(), sw, [&] {
         sw.queue_one_time_submit(dq.queue(), [&](auto pcb) {
@@ -53,7 +51,7 @@ struct thread : voo::casein_thread {
               vee::clear_colour(0, 0, 0, 0),
             },
           }};
-          vee::cmd_push_vert_frag_constants(*scb, *pl, &pc);
+          vee::cmd_push_vert_frag_constants(*scb, *pl, &g_pc);
           oqr.run(*scb, sw.extent());
 
           int mx = casein::mouse_pos.x * casein::screen_scale_factor;
@@ -63,14 +61,28 @@ struct thread : voo::casein_thread {
 
         auto mem = hbuf.map();
         auto pick = static_cast<unsigned char *>(*mem);
-        if (pick[3]) pc.selection = { pick[0], pick[1] };
-        else pc.selection = { 255, 255 };
+        if (pick[3]) g_pc.selection = { pick[0], pick[1] };
+        else g_pc.selection = { 255, 255 };
       });
     }
   }
 } t;
 
+static void drag_start() {
+  g_pc.drag_origin = g_pc.selection;
+}
+static void drag_end() {
+  g_pc.drag_origin = { 255, 255 };
+}
+
 struct init {
   init() {
+    using namespace casein;
+
+    handle(MOUSE_DOWN, drag_start);
+    handle(TOUCH_DOWN, drag_start);
+
+    handle(MOUSE_UP, drag_end);
+    handle(TOUCH_UP, drag_end);
   }
 } i;
