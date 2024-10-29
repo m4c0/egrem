@@ -7,9 +7,11 @@ import dotz;
 import vee;
 import voo;
 
+static constexpr const dotz::vec2 nil { -1, -1 };
+
 struct upc {
-  dotz::vec2 drag_origin { 255, 255 };
-  dotz::vec2 selection { 255, 255 };
+  dotz::vec2 drag_origin = nil;
+  dotz::vec2 selection = nil;
   float aspect;
 } g_pc;
 
@@ -62,7 +64,7 @@ struct thread : voo::casein_thread {
         auto mem = hbuf.map();
         auto pick = static_cast<unsigned char *>(*mem);
         if (pick[3]) g_pc.selection = { pick[0], pick[1] };
-        else g_pc.selection = { 255, 255 };
+        else g_pc.selection = nil;
       });
     }
   }
@@ -72,7 +74,7 @@ static void drag_start() {
   g_pc.drag_origin = g_pc.selection;
 }
 static void drag_end() {
-  g_pc.drag_origin = { 255, 255 };
+  g_pc.drag_origin = nil;
 }
 
 struct init {
