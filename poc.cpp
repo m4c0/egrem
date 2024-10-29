@@ -8,7 +8,8 @@ import vee;
 import voo;
 
 struct upc {
-  dotz::vec2 selection;
+  dotz::vec2 drag_origin { 255, 255 };
+  dotz::vec2 selection { 255, 255 };
   float aspect;
 };
 
