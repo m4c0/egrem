@@ -32,7 +32,7 @@ vec4 op_rep(vec2 p) {
 }
 
 vec3 inigo_debug(float d) {
-  // this is 2.0 / resolution.y in Shader Toy. Impacts wave length.
+  // this is 2.0 / resolution.y in Shader Toy. Impacts line thickness.
   const float px = 2.0 / 600.0;
 
   vec3 col = (d>0.0) ? vec3(0.9,0.6,0.3) : vec3(0.65,0.85,1.0);
