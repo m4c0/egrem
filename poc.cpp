@@ -98,5 +98,6 @@ struct init {
 
     handle(MOUSE_UP, drag_end);
     handle(TOUCH_UP, drag_end);
+    handle(TOUCH_CANCEL, drag_end);
   }
 } i;

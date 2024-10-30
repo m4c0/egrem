@@ -48,6 +48,7 @@ bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
 void main() {
   vec2 aspect = vec2(pc.aspect, 1);
+  if (aspect.x < 1.0) aspect = vec2(1.0, 1.0 / aspect);
   vec2 p = frag_pos * aspect;
   vec2 mp = (frag_pos - pc.drag_pos) * aspect;
 
