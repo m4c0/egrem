@@ -7,10 +7,11 @@ import dotz;
 import vee;
 import voo;
 
-static constexpr const dotz::vec2 nil { -1, -1 };
+static constexpr const dotz::vec2 nil { 1e00f, 1e10f };
 
 struct upc {
   dotz::vec2 drag_origin = nil;
+  dotz::vec2 drag_pos = nil;
   dotz::vec2 selection = nil;
   float aspect;
 } g_pc;
@@ -70,11 +71,19 @@ struct thread : voo::casein_thread {
   }
 } t;
 
+static void drag_move() {
+  if (dotz::length(g_pc.drag_origin - nil) < 0.001) {
+    g_pc.drag_pos = nil;
+    return;
+  }
+  g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
+}
 static void drag_start() {
   g_pc.drag_origin = g_pc.selection;
+  drag_move();
 }
 static void drag_end() {
-  g_pc.drag_origin = nil;
+  g_pc.drag_origin = g_pc.drag_pos = nil;
 }
 
 struct init {
@@ -83,6 +92,9 @@ struct init {
 
     handle(MOUSE_DOWN, drag_start);
     handle(TOUCH_DOWN, drag_start);
+
+    handle(MOUSE_MOVE, drag_move);
+    handle(TOUCH_MOVE, drag_move);
 
     handle(MOUSE_UP, drag_end);
     handle(TOUCH_UP, drag_end);
