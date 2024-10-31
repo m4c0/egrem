@@ -78,10 +78,6 @@ static void drag_move() {
   }
   g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
 }
-static void drag_start() {
-  g_pc.drag_origin = g_pc.selection;
-  drag_move();
-}
 static void drag_end() {
   g_pc.drag_origin = g_pc.drag_pos = nil;
 }
@@ -90,14 +86,25 @@ struct init {
   init() {
     using namespace casein;
 
-    handle(MOUSE_DOWN, drag_start);
-    handle(TOUCH_DOWN, drag_start);
-
+#ifndef LECO_TARGET_IOS
+    handle(MOUSE_DOWN, [] {
+      g_pc.drag_origin = g_pc.selection;
+      drag_move();
+    });
     handle(MOUSE_MOVE, drag_move);
-    handle(TOUCH_MOVE, drag_move);
-
     handle(MOUSE_UP, drag_end);
+#else
+    static bool touch_started {};
+    handle(TOUCH_DOWN, [] { touch_started = true; });
+    handle(TOUCH_MOVE, [] {
+      if (touch_started) {
+        g_pc.drag_origin = g_pc.selection;
+        touch_started = false;
+      }
+      drag_move();
+    });
     handle(TOUCH_UP, drag_end);
     handle(TOUCH_CANCEL, drag_end);
+#endif
   }
 } i;
