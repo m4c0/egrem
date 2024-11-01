@@ -116,6 +116,10 @@ struct init {
   init() {
     using namespace casein;
 
+    g_map[11][10] = b_circle;
+    g_map[7][4] = b_circle;
+    g_map[2][9] = b_circle;
+
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
       g_pc.drag_origin = g_pc.selection;
