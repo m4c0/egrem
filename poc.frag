@@ -7,6 +7,8 @@ layout(push_constant) uniform upc {
   float aspect;
 } pc;
 
+layout(set = 0, binding = 0) uniform usampler2D u_map;
+
 layout(location = 0) in vec2 frag_pos;
 
 layout(location = 0) out vec4 frag_colour;
@@ -55,6 +57,8 @@ void main() {
   vec4 pp = op_rep(p);
   float r = eq(pp.zw, pc.drag_origin) ? 0.2 : 0.3;
   float d = sd_rnd_box(pp.xy, vec2(r), 0.1);
+
+  uvec4 map = texture(u_map, pp.zw);
 
   bool sel = d < 0 && eq(pp.zw, pc.selection);
 

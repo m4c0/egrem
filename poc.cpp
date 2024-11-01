@@ -9,12 +9,31 @@ import voo;
 
 static constexpr const dotz::vec2 nil { 1e00f, 1e10f };
 
+enum block {
+  b_empty,
+  b_circle,
+};
+
 struct upc {
   dotz::vec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
   dotz::vec2 selection = nil;
   float aspect;
 } g_pc;
+
+static block g_map[16][16];
+
+static void update_grid(voo::h2l_image * img) {
+  struct pix { unsigned char r, g, b, a; };
+
+  voo::mapmem mem { img->host_memory() };
+  auto ptr = static_cast<pix *>(*mem);
+  for (unsigned char y = 0; y < 16; y++) {
+    for (unsigned char x = 0; x < 16; x++, ptr++) {
+      ptr->r = g_map[y][x];
+    }
+  }
+}
 
 struct thread : voo::casein_thread {
   void run() override {
@@ -32,9 +51,19 @@ struct thread : voo::casein_thread {
       voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt };
       voo::offscreen::host_buffer hbuf { pd, { 1, 1 } };
 
-      auto pl = vee::create_pipeline_layout({
+      voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U };
+      grid.run_once();
+
+      auto dsl = vee::create_descriptor_set_layout({ vee::dsl_fragment_sampler() });
+      auto dp = vee::create_descriptor_pool(1, { vee::combined_image_sampler() });
+      auto dset = vee::allocate_descriptor_set(*dp, *dsl);
+      auto smp = vee::create_sampler(vee::nearest_sampler);
+      vee::update_descriptor_set(dset, 0, grid.data().iv(), *smp);
+
+      auto pl = vee::create_pipeline_layout(
+        *dsl,
         vee::vert_frag_push_constant_range<upc>()
-      });
+      );
       voo::one_quad_render oqr { "poc", pd, *rp, *pl, {
         vee::colour_blend_classic(), vee::colour_blend_none()
       }};
@@ -55,6 +84,7 @@ struct thread : voo::casein_thread {
             },
           }};
           vee::cmd_push_vert_frag_constants(*scb, *pl, &g_pc);
+          vee::cmd_bind_descriptor_set(*scb, *pl, 0, dset);
           oqr.run(*scb, sw.extent());
 
           int mx = casein::mouse_pos.x * casein::screen_scale_factor;
