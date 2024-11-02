@@ -10,8 +10,8 @@ import voo;
 static constexpr const dotz::vec2 nil { 1e00f, 1e10f };
 
 enum block {
-  b_empty,
-  b_circle,
+  b_empty  = 0,
+  b_circle = 1,
 };
 
 struct upc {
@@ -51,7 +51,7 @@ struct thread : voo::casein_thread {
       voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt };
       voo::offscreen::host_buffer hbuf { pd, { 1, 1 } };
 
-      voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U };
+      voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U, vee::image_format_rgba_uint };
       grid.run_once();
 
       auto dsl = vee::create_descriptor_set_layout({ vee::dsl_fragment_sampler() });

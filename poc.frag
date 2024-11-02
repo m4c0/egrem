@@ -38,7 +38,7 @@ vec3 drag_cursor(vec3 c) {
   return c;
 }
 
-vec3 cell_box(float d, bool sel, uvec4 map) {
+vec3 cell_box(vec2 p, float d, bool sel, uvec4 map) {
   const vec3 inside = vec3(0.2, 0.2, 0.4);  
   const vec3 outside = vec3(0.1, 0.1, 0.3);  
   const vec3 border = sel ? vec3(1) : vec3(0.4);
@@ -47,6 +47,12 @@ vec3 cell_box(float d, bool sel, uvec4 map) {
   vec3 c = mix(inside, outside, step(0, d));
   c = c * (1.0 - exp2(-50.0 * abs(d)));
   c = mix(border, c, smoothstep(0, border_w, abs(d)));
+
+  if (map.r == 1) {
+    float d = sd_circle(p, 0.3);
+    c = mix(vec3(1, 0, 0), c, step(0, d));
+  }
+
   return c;
 }
 
@@ -59,9 +65,9 @@ vec4 grid(vec4 pp) {
     d = sd_rnd_box(pp.xy, vec2(r), 0.1);
   }
 
-  uvec4 map = texture(u_map, pp.zw);
+  uvec4 map = texture(u_map, pp.zw / 16.0);
 
-  vec3 c = cell_box(d, sel, map);
+  vec3 c = cell_box(pp.xy, d, sel, map);
   return vec4(c, d < 0);
 }
 
