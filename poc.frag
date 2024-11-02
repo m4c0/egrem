@@ -32,23 +32,29 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
-void main() {
-  vec2 p = frag_pos;
-  vec2 mp = mouse_pos;
+vec3 drag_cursor(vec3 c) {
+  float dd = sd_rnd_box(mouse_pos, vec2(0.05), 0.025);
+  c = mix(c, vec3(1, 0, 0), 1.0 - step(0, dd));
+  return c;
+}
 
-  vec4 pp = op_rep(p);
+vec4 grid(vec4 pp) {
   float r = eq(pp.zw, pc.drag_origin) ? 0.2 : 0.3;
   float d = sd_rnd_box(pp.xy, vec2(r), 0.1);
 
   uvec4 map = texture(u_map, pp.zw);
 
   bool sel = d < 0 && eq(pp.zw, pc.selection);
-
   vec3 c = sel ? vec3(1) : inigo_debug(d);
-  
-  float dd = sd_rnd_box(mp, vec2(0.05), 0.025);
-  c = mix(c, vec3(1, 0, 0), 1.0 - step(0, dd));
+  return vec4(c, d < 0);
+}
 
-  frag_colour = vec4(c, 1.0);
-  frag_id = vec4(pp.zw / 256.0, 0, d < 0);
+void main() {
+  vec4 pp = op_rep(frag_pos);
+
+  vec4 c = grid(pp);
+  c.rgb = drag_cursor(c.rgb);
+
+  frag_colour = vec4(c.rgb, 1.0);
+  frag_id = vec4(pp.zw / 256.0, 0, c.a);
 }
