@@ -116,9 +116,9 @@ struct init {
   init() {
     using namespace casein;
 
-    g_map[11][10] = b_circle;
-    g_map[7][4] = b_circle;
-    g_map[2][9] = b_circle;
+    g_map[1][1] = b_circle;
+    g_map[3][4] = b_circle;
+    g_map[2][5] = b_circle;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
