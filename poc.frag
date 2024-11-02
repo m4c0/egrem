@@ -38,37 +38,34 @@ vec3 drag_cursor(vec3 c) {
   return c;
 }
 
-vec3 cell_box(vec2 p, float d, bool sel, uvec4 map) {
+vec4 cell_box(vec2 p, bool sel, uvec4 map) {
   const vec3 inside = vec3(0.2, 0.2, 0.4);  
   const vec3 outside = vec3(0.1, 0.1, 0.3);  
-  const vec3 border = sel ? vec3(1) : vec3(0.4);
-  const float border_w = sel ? 0.04 : 0.02;
+  const vec3 border = sel ? vec3(1) : vec3(0.7);
+
+  float d = sd_rnd_box(p, vec2(0.3), 0.1);
 
   vec3 c = mix(inside, outside, step(0, d));
   c = c * (1.0 - exp2(-50.0 * abs(d)));
-  c = mix(border, c, smoothstep(0, border_w, abs(d)));
+  c = mix(border, c, smoothstep(0, 0.02, abs(d)));
 
   if (map.r == 1) {
     float d = sd_circle(p, 0.3);
     c = mix(vec3(1, 0, 0), c, step(0, d));
   }
 
-  return c;
+  return vec4(c, d < 0);
 }
 
 vec4 grid(vec4 pp) {
-  float d = sd_rnd_box(pp.xy, vec2(0.30), 0.15);
-  bool sel = d < 0 && eq(pp.zw, pc.selection);
+  bool sel = eq(pp.zw, pc.selection);
 
-  if (!sel) {
-    float r = eq(pp.zw, pc.drag_origin) ? 0.2 : 0.3;
-    d = sd_rnd_box(pp.xy, vec2(r), 0.1);
-  }
+  float scale = sel ? 0.9 : eq(pp.zw, pc.drag_origin) ? 1.2 : 1.0;
 
   uvec4 map = texture(u_map, pp.zw / 16.0);
 
-  vec3 c = cell_box(pp.xy, d, sel, map);
-  return vec4(c, d < 0);
+  vec4 c = cell_box(scale * pp.xy, sel, map);
+  return c;
 }
 
 void main() {
