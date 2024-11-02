@@ -12,6 +12,7 @@ layout(push_constant) uniform upc {
 layout(set = 0, binding = 0) uniform usampler2D u_map;
 
 layout(location = 0) in vec2 frag_pos;
+layout(location = 1) in vec2 mouse_pos;
 
 layout(location = 0) out vec4 frag_colour;
 layout(location = 1) out vec4 frag_id;
@@ -32,10 +33,8 @@ vec4 op_rep(vec2 p) {
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
 void main() {
-  vec2 aspect = vec2(pc.aspect, 1);
-  if (aspect.x < 1.0) aspect = vec2(1.0, 1.0 / aspect);
-  vec2 p = frag_pos * aspect;
-  vec2 mp = (frag_pos - pc.drag_pos) * aspect;
+  vec2 p = frag_pos;
+  vec2 mp = mouse_pos;
 
   vec4 pp = op_rep(p);
   float r = eq(pp.zw, pc.drag_origin) ? 0.2 : 0.3;
