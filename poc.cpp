@@ -7,7 +7,7 @@ import dotz;
 import vee;
 import voo;
 
-static constexpr const dotz::vec2 nil { 1e10f };
+static constexpr const dotz::ivec2 nil { 10000 };
 
 enum block {
   b_empty  = 0,
@@ -15,9 +15,9 @@ enum block {
 };
 
 struct upc {
-  dotz::vec2 drag_origin = nil;
+  dotz::ivec2 selection = nil;
+  dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
-  dotz::vec2 selection = nil;
   float aspect;
 } g_pc;
 
@@ -109,7 +109,8 @@ static void drag_move() {
   g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
 }
 static void drag_end() {
-  g_pc.drag_origin = g_pc.drag_pos = nil;
+  g_pc.drag_origin = nil;
+  g_pc.drag_pos = nil;
 }
 
 struct init {
