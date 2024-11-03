@@ -37,7 +37,7 @@ vec4 cell_box(vec2 p, bool sel, uvec4 map) {
   vec3 outside = vec3(0.1, 0.1, 0.3);  
   vec3 border = sel ? vec3(1) : vec3(0.7);
 
-  if (map.r == 0) {
+  if (map.g == 0) {
     inside *= 0.6;
     border *= 0.6;
   }
@@ -53,7 +53,7 @@ vec4 cell_box(vec2 p, bool sel, uvec4 map) {
     c = mix(vec3(1, 0, 0), c, step(0, d));
   }
 
-  return vec4(c, d < 0 && map.r != 0);
+  return vec4(c, d < 0 && map.g != 0);
 }
 
 vec4 grid(vec4 pp) {

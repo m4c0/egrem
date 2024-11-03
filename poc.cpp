@@ -32,7 +32,11 @@ static void update_grid(voo::h2l_image * img) {
   auto ptr = static_cast<pix *>(*mem);
   for (unsigned char y = 0; y < 16; y++) {
     for (unsigned char x = 0; x < 16; x++, ptr++) {
-      ptr->r = g_map[y][x];
+      auto blk = g_map[y][x];
+      auto valid_target = (blk != 0) ^ (g_pc.drag_origin != nil);
+
+      ptr->r = blk;
+      ptr->g = valid_target;
     }
   }
 }
@@ -118,11 +122,11 @@ static void drag_end() {
     if (o != t && t == b_empty) {
       t = o;
       o = b_empty;
-      g_redraw_map();
     }
   }
   g_pc.drag_origin = nil;
   g_pc.drag_pos = nil;
+  g_redraw_map();
 }
 
 struct init {
@@ -137,6 +141,7 @@ struct init {
     handle(MOUSE_DOWN, [] {
       g_pc.drag_origin = g_pc.selection;
       drag_move();
+      g_redraw_map();
     });
     handle(MOUSE_MOVE, drag_move);
     handle(MOUSE_UP, drag_end);
@@ -147,6 +152,7 @@ struct init {
       if (touch_started) {
         g_pc.drag_origin = g_pc.selection;
         touch_started = false;
+        g_redraw_map();
       }
       drag_move();
     });
