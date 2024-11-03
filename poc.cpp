@@ -7,7 +7,7 @@ import dotz;
 import vee;
 import voo;
 
-static constexpr const dotz::vec2 nil { 1e00f, 1e10f };
+static constexpr const dotz::vec2 nil { 1e10f };
 
 enum block {
   b_empty  = 0,
