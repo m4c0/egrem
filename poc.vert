@@ -1,11 +1,6 @@
 #version 450
-
-layout(push_constant) uniform upc {
-  vec2 drag_origin;
-  vec2 drag_pos;
-  vec2 selection;
-  float aspect;
-} pc;
+#extension GL_GOOGLE_include_directive : require
+#include "poc.glsl"
 
 layout(location = 0) in vec2 pos;
 
