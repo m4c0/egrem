@@ -105,14 +105,14 @@ struct thread : voo::casein_thread {
 } t;
 
 static void drag_move() {
-  if (dotz::length(g_pc.drag_origin - nil) < 0.001) {
+  if (g_pc.drag_origin == nil) {
     g_pc.drag_pos = nil;
     return;
   }
   g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
 }
 static void drag_end() {
-  if (g_pc.drag_origin != nil) {
+  if (g_pc.drag_origin != nil && g_pc.selection != nil) {
     auto & o = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
     auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
     if (o != t && t == b_empty) {
