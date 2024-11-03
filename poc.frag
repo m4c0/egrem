@@ -1,13 +1,7 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
+#include "poc.glsl"
 #include "../glslinc/inigo.glsl"
-
-layout(push_constant) uniform upc {
-  vec2 drag_origin;
-  vec2 drag_pos;
-  vec2 selection;
-  float aspect;
-} pc;
 
 layout(set = 0, binding = 0) uniform usampler2D u_map;
 

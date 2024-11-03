@@ -4,10 +4,11 @@
 
 import casein;
 import dotz;
+import hai;
 import vee;
 import voo;
 
-static constexpr const dotz::vec2 nil { 1e00f, 1e10f };
+static constexpr const dotz::ivec2 nil { 10000 };
 
 enum block {
   b_empty  = 0,
@@ -15,13 +16,14 @@ enum block {
 };
 
 struct upc {
-  dotz::vec2 drag_origin = nil;
+  dotz::ivec2 selection = nil;
+  dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
-  dotz::vec2 selection = nil;
   float aspect;
 } g_pc;
 
 static block g_map[16][16];
+static hai::fn<void> g_redraw_map;
 
 static void update_grid(voo::h2l_image * img) {
   struct pix { unsigned char r, g, b, a; };
@@ -53,6 +55,7 @@ struct thread : voo::casein_thread {
 
       voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U, vee::image_format_rgba_uint };
       grid.run_once();
+      g_redraw_map = [&] { grid.run_once(); };
 
       auto dsl = vee::create_descriptor_set_layout({ vee::dsl_fragment_sampler() });
       auto dp = vee::create_descriptor_pool(1, { vee::combined_image_sampler() });
@@ -109,7 +112,17 @@ static void drag_move() {
   g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
 }
 static void drag_end() {
-  g_pc.drag_origin = g_pc.drag_pos = nil;
+  if (g_pc.drag_origin != nil) {
+    auto & o = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
+    auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
+    if (o != t && t == b_empty) {
+      t = o;
+      o = b_empty;
+      g_redraw_map();
+    }
+  }
+  g_pc.drag_origin = nil;
+  g_pc.drag_pos = nil;
 }
 
 struct init {
