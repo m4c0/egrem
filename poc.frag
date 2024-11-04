@@ -38,7 +38,9 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
     float d = sd_circle(p, 0.3);
     c = mix(vec3(1, 0, 0), c, step(0, d));
   } else if (map.r == 2) { // b_lock
-    c = vec3(0, 0, 0);
+    float d = sd_rnd_x(p, 1.0, 0.05);
+    // TODO: make this more colour-blindness-friendly
+    c = mix(vec3(1, 0, 0), c, step(0, d) * 0.3 + 0.7);
   }
   return c;
 }
