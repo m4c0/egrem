@@ -45,7 +45,7 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   return c;
 }
 
-vec4 cell_box(vec2 p, bool sel, uvec4 map) {
+vec4 cell_box(vec2 p, bool sel, bool drag_o, uvec4 map) {
   float sat = map.g == 0 ? 0.6 : 1.0;
   //map.g == 0 ? vec3(0.2, 0.2, 0.4) : vec3(0.15, 0.25, 0.4);
   vec3 inside = hsv2rgb(vec3(0.6, sat, 0.4));
@@ -56,6 +56,7 @@ vec4 cell_box(vec2 p, bool sel, uvec4 map) {
   float d = sd_rnd_box(p, vec2(0.3), 0.1);
 
   vec3 c = cell_sprite(p, inside, map);
+  c = mix(c, inside, drag_o ? 0.7 : 0.0);
   c = mix(c, outside, step(0, d));
   c = c * (1.0 - exp2(-50.0 * abs(d)));
   c = mix(border, c, smoothstep(0, border_w, abs(d)));
@@ -65,12 +66,13 @@ vec4 cell_box(vec2 p, bool sel, uvec4 map) {
 
 vec4 grid(vec4 pp) {
   bool sel = eq(pp.zw, pc.selection);
+  bool drag_origin = eq(pp.zw, pc.drag_origin);
 
-  float scale = sel ? 0.9 : eq(pp.zw, pc.drag_origin) ? 1.2 : 1.0;
+  float scale = sel ? 0.9 : drag_origin ? 1.2 : 1.0;
 
   uvec4 map = texture(u_map, pp.zw / 16.0);
 
-  vec4 c = cell_box(scale * pp.xy, sel, map);
+  vec4 c = cell_box(scale * pp.xy, sel, drag_origin, map);
   return c;
 }
 
