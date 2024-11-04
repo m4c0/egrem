@@ -32,26 +32,26 @@ vec3 drag_cursor(vec3 c) {
   return c;
 }
 
+vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
+  if (map.r == 1) {
+    float d = sd_circle(p, 0.3);
+    c = mix(vec3(1, 0, 0), c, step(0, d));
+  }
+  return c;
+}
+
 vec4 cell_box(vec2 p, bool sel, uvec4 map) {
   vec3 inside = vec3(0.2, 0.2, 0.4);  
   vec3 outside = vec3(0.1, 0.1, 0.3);  
   vec3 border = sel ? vec3(1) : vec3(0.7);
-
-  if (map.g == 0) {
-    inside *= 0.6;
-    border *= 0.6;
-  }
+  float border_w = map.g == 0 ? 0.02 : 0.03;
 
   float d = sd_rnd_box(p, vec2(0.3), 0.1);
 
   vec3 c = mix(inside, outside, step(0, d));
   c = c * (1.0 - exp2(-50.0 * abs(d)));
-  c = mix(border, c, smoothstep(0, 0.02, abs(d)));
-
-  if (map.r == 1) {
-    float d = sd_circle(p, 0.3);
-    c = mix(vec3(1, 0, 0), c, step(0, d));
-  }
+  c = mix(border, c, smoothstep(0, border_w, abs(d)));
+  c = cell_sprite(p, c, map);
 
   return vec4(c, d < 0 && map.g != 0);
 }
