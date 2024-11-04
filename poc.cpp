@@ -5,14 +5,18 @@
 import casein;
 import dotz;
 import hai;
+import traits;
 import vee;
 import voo;
 
+using namespace traits::ints;
+
 static constexpr const dotz::ivec2 nil { 10000 };
 
-enum block {
+enum block : uint8_t {
   b_empty  = 0,
   b_circle = 1,
+  b_locked = 2,
 };
 
 struct upc {
@@ -33,7 +37,8 @@ static void update_grid(voo::h2l_image * img) {
   for (unsigned char y = 0; y < 16; y++) {
     for (unsigned char x = 0; x < 16; x++, ptr++) {
       auto blk = g_map[y][x];
-      auto valid_target = (blk != 0) ^ (g_pc.drag_origin != nil);
+      auto valid_target = (blk != b_empty) ^ (g_pc.drag_origin != nil);
+      valid_target &= blk != b_locked;
 
       ptr->r = blk;
       ptr->g = valid_target;
@@ -133,9 +138,16 @@ struct init {
   init() {
     using namespace casein;
 
-    g_map[1][1] = b_circle;
-    g_map[3][4] = b_circle;
-    g_map[2][5] = b_circle;
+    for (auto & row : g_map)
+      for (auto & col : row)
+        col = b_locked;
+
+    for (auto y = 3; y < 6; y++)
+      for (auto x = 3; x < 6; x++)
+        g_map[y][x] = b_empty;
+
+    g_map[3][5] = b_circle;
+    g_map[4][5] = b_circle;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
