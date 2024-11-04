@@ -1,6 +1,7 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
 #include "poc.glsl"
+#include "../glslinc/hsv2rgb.glsl"
 #include "../glslinc/inigo.glsl"
 
 layout(set = 0, binding = 0) uniform usampler2D u_map;
@@ -41,7 +42,9 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
 }
 
 vec4 cell_box(vec2 p, bool sel, uvec4 map) {
-  vec3 inside = vec3(0.2, 0.2, 0.4);  
+  float sat = map.g == 0 ? 0.6 : 1.0;
+  //map.g == 0 ? vec3(0.2, 0.2, 0.4) : vec3(0.15, 0.25, 0.4);
+  vec3 inside = hsv2rgb(vec3(0.6, sat, 0.4));
   vec3 outside = vec3(0.1, 0.1, 0.3);  
   vec3 border = sel ? vec3(1) : vec3(0.7);
   float border_w = map.g == 0 ? 0.02 : 0.03;
