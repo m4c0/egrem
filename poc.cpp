@@ -17,6 +17,7 @@ enum block : uint8_t {
   b_empty  = 0,
   b_circle = 1,
   b_locked = 2,
+  b_square = 3,
 };
 
 struct upc {
@@ -147,7 +148,7 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[3][5] = b_circle;
-    g_map[4][5] = b_circle;
+    g_map[4][5] = b_square;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {

@@ -34,13 +34,19 @@ vec3 drag_cursor(vec3 c) {
 }
 
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
-  if (map.r == 1) { // b_circle
+  if (map.r == 0) { // b_empty
+  } else if (map.r == 1) { // b_circle
     float d = sd_circle(p, 0.3);
     c = mix(vec3(1, 0, 0), c, step(0, d));
   } else if (map.r == 2) { // b_lock
     float d = sd_rnd_x(p, 1.0, 0.05);
     // TODO: make this more colour-blindness-friendly
     c = mix(vec3(1, 0, 0), c, step(0, d) * 0.3 + 0.7);
+  } else if (map.r == 3) { // b_square
+    float d = sd_rnd_box(p, vec2(0.2), 0.05);
+    c = mix(vec3(1, 0, 0), c, step(0, d));
+  } else {
+    c = vec3(1, 0, 1); // Should not happen
   }
   return c;
 }
