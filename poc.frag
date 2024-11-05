@@ -33,11 +33,44 @@ vec3 drag_cursor(vec3 c) {
   return c;
 }
 
+vec3 sheep_body(vec2 p, vec3 c) {
+  p.y *= -1;
+  p.y += 0.05;
+  float d = sd_cut_disk(p, 0.25, -0.15);
+  c = mix(vec3(0.8, 0.7, 0.6), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+vec3 sheep_feet(vec2 p, vec3 c) {
+  p.x = abs(p.x);
+  p.x -= 0.15;
+  p.y -= 0.22;
+  float d = sd_circle(p, 0.06);
+  return mix(vec3(0), c, step(0, d));
+}
+vec3 sheep_head(vec2 p, vec3 c) {
+  float d = sd_tunnel(p, vec2(0.1, 0.1));
+  return mix(vec3(0), c, step(0, d));
+}
+vec3 sheep_ears(vec2 p, vec3 c) {
+  p.x = abs(p.x) - 0.14;
+  p.y += 0.02;
+  float d = sd_tunnel(p, vec2(0.03, 0.05));
+  return mix(vec3(0), c, step(0, d));
+}
+vec3 sheep(vec2 p, vec3 c) {
+  p.y += 0.03;
+  c = sheep_feet(p, c);
+  c = sheep_body(p, c);
+  c = sheep_head(p, c);
+  c = sheep_ears(p, c);
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) { // b_empty
-  } else if (map.r == 1) { // b_circle
-    float d = sd_circle(p, 0.3);
-    c = mix(vec3(1, 0, 0), c, step(0, d));
+  } else if (map.r == 1) { // b_sheep
+    c = sheep(p, c);
   } else if (map.r == 2) { // b_lock
     float d = sd_rnd_x(p, 1.0, 0.05);
     // TODO: make this more colour-blindness-friendly

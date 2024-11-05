@@ -15,7 +15,7 @@ static constexpr const dotz::ivec2 nil { 10000 };
 
 enum block : uint8_t {
   b_empty  = 0,
-  b_circle = 1,
+  b_sheep = 1,
   b_locked = 2,
   b_square = 3,
 };
@@ -147,7 +147,7 @@ struct init {
       for (auto x = 3; x < 6; x++)
         g_map[y][x] = b_empty;
 
-    g_map[3][5] = b_circle;
+    g_map[3][5] = b_sheep;
     g_map[4][5] = b_square;
 
 #ifndef LECO_TARGET_IOS
