@@ -67,8 +67,8 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
     c = sheep(p, c);
   } else if (map.r == 2) { // b_lock
     float d = sd_rnd_x(p, 1.0, 0.05);
-    // TODO: make this more colour-blindness-friendly
-    c = mix(vec3(1, 0, 0), c, step(0, d) * 0.3 + 0.7);
+    vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
+    c = mix(xc, c, step(0, d) * 0.3 + 0.7);
   } else if (map.r == 3) { // b_square
     float d = sd_rnd_box(p, vec2(0.2), 0.05);
     c = mix(vec3(1, 0, 0), c, step(0, d));
