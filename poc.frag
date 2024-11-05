@@ -98,6 +98,7 @@ vec4 cell_box(vec2 p, bool sel, bool drag_o, uvec4 map) {
   c = mix(c, outside, step(0, d));
   c = c * (1.0 - exp2(-50.0 * abs(d)));
   c = mix(border, c, smoothstep(0, border_w, abs(d)));
+  c = mix(outside, c, map.a / 256.0);
 
   return vec4(c, d < 0 && map.g != 0);
 }

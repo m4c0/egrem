@@ -45,6 +45,16 @@ static void update_grid(voo::h2l_image * img) {
 
       ptr->r = blk;
       ptr->g = valid_target;
+      if (blk != b_locked) {
+        ptr->a = 255;
+        continue;
+      }
+      auto a = 0;
+      if (x > 0 && g_map[y][x - 1] != b_locked) a++;
+      if (y > 0 && g_map[y - 1][x] != b_locked) a++;
+      if (x < 15 && g_map[y][x + 1] != b_locked) a++;
+      if (y < 15 && g_map[y + 1][x] != b_locked) a++;
+      ptr->a = a > 0 ? 255 : 0;
     }
   }
 }
