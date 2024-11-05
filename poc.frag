@@ -16,7 +16,7 @@ vec4 op_rep(vec2 p) {
   const float count = 9; // number of squares
   const float s = 1.0; // size of each square
 
-  p = p * 5.0 + (count - 1) / 2.0;
+  p = p * pc.scale + (count - 1) / 2.0;
 
   vec2 id = round(p / s);
   id = clamp(id, 0, count - 1);

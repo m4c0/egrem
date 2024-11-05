@@ -25,6 +25,7 @@ struct upc {
   dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
   float aspect;
+  float scale = 3.0;
 } g_pc;
 
 static block g_map[16][16];
