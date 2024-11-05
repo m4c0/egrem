@@ -22,6 +22,7 @@ enum block : uint8_t {
 
 struct upc {
   dotz::ivec2 selection = nil;
+  dotz::ivec2 sel_idx {};
   dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
   float aspect;
@@ -121,6 +122,7 @@ static void drag_move() {
     return;
   }
   g_pc.drag_pos = (casein::mouse_pos / casein::window_size) * 2.0 - 1.0;
+  g_pc.sel_idx.x = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
 }
 static void drag_end() {
   if (g_pc.drag_origin != nil && g_pc.selection != nil) {

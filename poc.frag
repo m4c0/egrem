@@ -27,12 +27,6 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
-vec3 drag_cursor(vec3 c) {
-  float dd = sd_rnd_box(mouse_pos, vec2(0.05), 0.025);
-  c = mix(c, vec3(1, 0, 0), 1.0 - step(0, dd));
-  return c;
-}
-
 vec3 sheep_body(vec2 p, vec3 c) {
   p.y *= -1;
   p.y += 0.05;
@@ -84,6 +78,11 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   return c;
 }
 
+vec3 drag_cursor(vec3 c) {
+  uvec4 map = uvec4(pc.selection.z, 0, 0, 0);
+  return cell_sprite(mouse_pos * 2.5, c, map);
+}
+
 vec4 cell_box(vec2 p, bool sel, bool drag_o, uvec4 map) {
   float sat = map.g == 0 ? 0.6 : 1.0;
   //map.g == 0 ? vec3(0.2, 0.2, 0.4) : vec3(0.15, 0.25, 0.4);
@@ -104,7 +103,7 @@ vec4 cell_box(vec2 p, bool sel, bool drag_o, uvec4 map) {
 }
 
 vec4 grid(vec4 pp) {
-  bool sel = eq(pp.zw, pc.selection);
+  bool sel = eq(pp.zw, pc.selection.xy);
   bool drag_origin = eq(pp.zw, pc.drag_origin);
 
   float scale = sel ? 0.9 : drag_origin ? 1.2 : 1.0;
