@@ -34,16 +34,39 @@ struct upc {
 static block g_map[16][16];
 static hai::fn<void> g_redraw_map;
 
+using mover_t = void (*)(block & from, block & to);
+static constexpr auto g_movers = [] {
+  struct {
+    mover_t data[256][256];
+  } res;
+  for (auto & row : res.data) {
+    for (auto & m : row) m = [](auto, auto) {};
+
+    row[b_empty] = [](auto & f, auto & t) {
+      t = f;
+      f = b_empty;
+    };
+  }
+
+  res.data[b_sheep][b_empty] = [](auto & f, auto & t) {
+    f = b_square;
+    t = b_sheep;
+  };
+  res.data[b_square][b_square] = [](auto & f, auto & t) {
+    f = b_empty;
+    t = b_empty;
+  };
+
+  return res;
+}();
+
 static auto map(dotz::ivec2 p) { 
   if (p.x < 0 || p.y < 0 || p.x > 15 || p.y > 15) return b_locked;
   return g_map[p.y][p.x];
 }
 
-static block move_result(block b) {
-  switch (b) {
-    case b_sheep: return b_square;
-    default: return b_empty;
-  }
+static void move(block & from, block & to) {
+  g_movers.data[from][to](from, to);
 }
 static bool can_drag(block b) {
   switch (b) {
@@ -173,10 +196,7 @@ static void drag_end() {
   if (g_pc.drag_origin != nil && g_pc.selection != nil) {
     auto & o = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
     auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
-    if (o != t && t == b_empty) {
-      t = o;
-      o = move_result(o);
-    }
+    move(o, t);
   }
   g_pc.drag_origin = nil;
   g_pc.drag_pos = nil;
