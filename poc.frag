@@ -61,6 +61,25 @@ vec3 sheep(vec2 p, vec3 c) {
   return c;
 }
 
+float wool_circle(vec2 p) {
+  p.x -= 0.1;
+  return sd_circle(p, 0.18);
+}
+vec3 wool(vec2 p, vec3 c) {
+  const float sp = 3.1415926535 * 2.0 / 3.0;
+  float an = atan(p.y, p.x);
+  float id = floor(an / sp);
+  float a1 = sp * (id + 0.0);
+  float a2 = sp * (id + 1.0);
+  vec2 r1 = mat2(cos(a1), -sin(a1), sin(a1), cos(a1)) * p;
+  vec2 r2 = mat2(cos(a2), -sin(a2), sin(a2), cos(a2)) * p;
+
+  float d = min(wool_circle(r1), wool_circle(r2));
+  c = mix(vec3(1.0, 0.9, 0.8), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) { // b_empty
   } else if (map.r == 1) { // b_sheep
@@ -69,9 +88,8 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
     float d = sd_rnd_x(p, 1.0, 0.05);
     vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
     c = mix(xc, c, step(0, d) * 0.3 + 0.7);
-  } else if (map.r == 3) { // b_square
-    float d = sd_rnd_box(p, vec2(0.2), 0.05);
-    c = mix(vec3(1, 0, 0), c, step(0, d));
+  } else if (map.r == 3) { // b_wool
+    c = wool(p, c);
   } else {
     c = vec3(1, 0, 1); // Should not happen
   }

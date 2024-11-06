@@ -17,7 +17,7 @@ enum block : uint8_t {
   b_empty  = 0,
   b_sheep  = 1,
   b_locked = 2,
-  b_square = 3,
+  b_wool = 3,
 };
 
 struct upc {
@@ -53,8 +53,8 @@ static constexpr auto g_movers = [] {
     };
   }
 
-  res.data[b_sheep][b_empty] = spawn<b_square>;
-  res.data[b_square][b_square] = merge<b_empty>;
+  res.data[b_sheep][b_empty] = spawn<b_wool>;
+  res.data[b_wool][b_wool] = merge<b_empty>;
 
   return res;
 }();
@@ -80,9 +80,9 @@ static bool can_drop(block from, block to) {
     case b_empty:  return true;
     default:       return false;
 
-    case b_square:
+    case b_wool:
       switch (from) {
-        case b_square: return true;
+        case b_wool: return true;
         default: return false;
       }
   }
@@ -215,7 +215,7 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[3][5] = b_sheep;
-    g_map[4][5] = b_square;
+    g_map[4][5] = b_wool;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
