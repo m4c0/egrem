@@ -35,6 +35,11 @@ static block g_map[16][16];
 static hai::fn<void> g_redraw_map;
 
 using mover_t = void (*)(block & from, block & to);
+template<block b>
+static constexpr auto spawn = [](auto & f, auto & t) { t = f; f = b; };
+template<block b>
+static constexpr auto merge = [](auto & f, auto & t) { t = b; f = b_empty; };
+
 static constexpr auto g_movers = [] {
   struct {
     mover_t data[256][256];
@@ -48,14 +53,8 @@ static constexpr auto g_movers = [] {
     };
   }
 
-  res.data[b_sheep][b_empty] = [](auto & f, auto & t) {
-    f = b_square;
-    t = b_sheep;
-  };
-  res.data[b_square][b_square] = [](auto & f, auto & t) {
-    f = b_empty;
-    t = b_empty;
-  };
+  res.data[b_sheep][b_empty] = spawn<b_square>;
+  res.data[b_square][b_square] = merge<b_empty>;
 
   return res;
 }();
