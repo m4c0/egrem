@@ -87,7 +87,7 @@ vec3 thr(vec2 p, vec3 c) {
 
   vec3 cc = vec3(1.0, 0.9, 0.8);
   float ss = sin(p.y * 314) * 0.3 + 0.7;
-  d = sd_rnd_box(p, vec2(0.23, 0.18), 0.01);
+  d = sd_rnd_box(p, vec2(0.20, 0.13), 0.06);
   c = mix(cc * ss, c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
   return c;
