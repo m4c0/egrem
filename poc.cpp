@@ -33,6 +33,13 @@ struct upc {
 static block g_map[16][16];
 static hai::fn<void> g_redraw_map;
 
+static block move_result(block b) {
+  switch (b) {
+    case b_sheep: return b_square;
+    default: return b_empty;
+  }
+}
+
 static void update_grid(voo::h2l_image * img) {
   struct pix { unsigned char r, g, b, a; };
 
@@ -141,7 +148,7 @@ static void drag_end() {
     auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
     if (o != t && t == b_empty) {
       t = o;
-      o = b_empty;
+      o = move_result(o);
     }
   }
   g_pc.drag_origin = nil;
