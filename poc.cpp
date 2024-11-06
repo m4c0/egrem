@@ -26,6 +26,7 @@ struct upc {
   dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
   float aspect;
+  // TODO: change scale after unlocking parts of map
   float scale = 3.0;
 } g_pc;
 
