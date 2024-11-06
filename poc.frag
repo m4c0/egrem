@@ -80,6 +80,19 @@ vec3 wool(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 thr(vec2 p, vec3 c) {
+  float d = sd_box(p, vec2(0.15, 0.25));
+  c = mix(vec3(0.4, 0.3, 0.1), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  vec3 cc = vec3(1.0, 0.9, 0.8);
+  float ss = sin(p.y * 314) * 0.3 + 0.7;
+  d = sd_rnd_box(p, vec2(0.23, 0.18), 0.01);
+  c = mix(cc * ss, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) { // b_empty
   } else if (map.r == 1) { // b_sheep
@@ -90,6 +103,8 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
     c = mix(xc, c, step(0, d) * 0.3 + 0.7);
   } else if (map.r == 3) { // b_wool
     c = wool(p, c);
+  } else if (map.r == 4) { // b_thread
+    c = thr(p, c);
   } else {
     c = vec3(1, 0, 1); // Should not happen
   }
