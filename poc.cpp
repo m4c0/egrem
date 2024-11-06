@@ -15,7 +15,7 @@ static constexpr const dotz::ivec2 nil { 10000 };
 
 enum block : uint8_t {
   b_empty  = 0,
-  b_sheep = 1,
+  b_sheep  = 1,
   b_locked = 2,
   b_square = 3,
 };
@@ -30,13 +30,39 @@ struct upc {
   float scale = 3.0;
 } g_pc;
 
+// TODO: reduce map to 9x9
 static block g_map[16][16];
 static hai::fn<void> g_redraw_map;
+
+static auto map(dotz::ivec2 p) { 
+  if (p.x < 0 || p.y < 0 || p.x > 15 || p.y > 15) return b_locked;
+  return g_map[p.y][p.x];
+}
 
 static block move_result(block b) {
   switch (b) {
     case b_sheep: return b_square;
     default: return b_empty;
+  }
+}
+static bool can_drag(block b) {
+  switch (b) {
+    case b_locked: return false;
+    case b_empty:  return false;
+    default:       return true;
+  }
+}
+static bool can_drop(block from, block to) {
+  switch (to) {
+    case b_locked: return false;
+    case b_empty:  return true;
+    default:       return false;
+
+    case b_square:
+      switch (from) {
+        case b_square: return true;
+        default: return false;
+      }
   }
 }
 
@@ -48,8 +74,9 @@ static void update_grid(voo::h2l_image * img) {
   for (unsigned char y = 0; y < 16; y++) {
     for (unsigned char x = 0; x < 16; x++, ptr++) {
       auto blk = g_map[y][x];
-      auto valid_target = (blk != b_empty) ^ (g_pc.drag_origin != nil);
-      valid_target &= blk != b_locked;
+      auto valid_target = g_pc.drag_origin == nil
+        ? can_drag(blk)
+        : can_drop(map(g_pc.drag_origin), blk);
 
       ptr->r = blk;
       ptr->g = valid_target;
