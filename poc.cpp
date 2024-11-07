@@ -19,6 +19,7 @@ enum block : uint8_t {
   b_locked = 2,
   b_wool   = 3,
   b_thread = 4,
+  b_fabric = 5,
 };
 
 struct upc {
@@ -41,12 +42,14 @@ static constexpr auto spawn = [](auto & f, auto & t) { t = f; f = b; };
 template<block b>
 static constexpr auto merge = [](auto & f, auto & t) { t = b; f = b_empty; };
 
+static constexpr auto ignore = [](auto, auto) {};
+
 static constexpr auto g_movers = [] {
   struct {
     mover_t data[256][256];
   } res;
   for (auto & row : res.data) {
-    for (auto & m : row) m = [](auto, auto) {};
+    for (auto & m : row) m = ignore;
 
     row[b_empty] = [](auto & f, auto & t) {
       t = f;
@@ -56,7 +59,8 @@ static constexpr auto g_movers = [] {
 
   res.data[b_sheep][b_empty] = spawn<b_wool>;
   res.data[b_wool][b_wool] = merge<b_thread>;
-  res.data[b_thread][b_thread] = merge<b_empty>;
+  res.data[b_thread][b_thread] = merge<b_fabric>;
+  res.data[b_fabric][b_fabric] = merge<b_empty>;
 
   return res;
 }();
@@ -80,18 +84,7 @@ static bool can_drop(block from, block to) {
   switch (to) {
     case b_locked: return false;
     case b_empty:  return true;
-    default:       return false;
-
-    case b_thread:
-      switch (from) {
-        case b_thread: return true;
-        default: return false;
-      }
-    case b_wool:
-      switch (from) {
-        case b_wool: return true;
-        default: return false;
-      }
+    default:       return g_movers.data[from][to] != ignore;
   }
 }
 
@@ -222,7 +215,7 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[3][5] = b_sheep;
-    g_map[4][5] = b_thread;
+    g_map[4][5] = b_fabric;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {

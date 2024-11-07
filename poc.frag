@@ -27,6 +27,13 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
+vec3 locked(vec2 p, vec3 c) {
+  float d = sd_rnd_x(p, 1.0, 0.05);
+  vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
+  c = mix(xc, c, step(0, d) * 0.3 + 0.7);
+  return c;
+}
+
 vec3 sheep_body(vec2 p, vec3 c) {
   p.y *= -1;
   p.y += 0.05;
@@ -93,21 +100,21 @@ vec3 thr(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 fabric(vec2 p, vec3 c) {
+  float d = sd_rhombus(p, vec2(0.20, 0.13));
+  c = mix(vec3(0.4, 0.3, 0.1), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
-  if (map.r == 0) { // b_empty
-  } else if (map.r == 1) { // b_sheep
-    c = sheep(p, c);
-  } else if (map.r == 2) { // b_lock
-    float d = sd_rnd_x(p, 1.0, 0.05);
-    vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
-    c = mix(xc, c, step(0, d) * 0.3 + 0.7);
-  } else if (map.r == 3) { // b_wool
-    c = wool(p, c);
-  } else if (map.r == 4) { // b_thread
-    c = thr(p, c);
-  } else {
-    c = vec3(1, 0, 1); // Should not happen
-  }
+  if (map.r == 0) {} // b_empty
+  else if (map.r == 1) c = sheep(p, c);
+  else if (map.r == 2) c = locked(p, c);
+  else if (map.r == 3) c = wool(p, c);
+  else if (map.r == 4) c = thr(p, c);
+  else if (map.r == 5) c = fabric(p, c);
+  else c = vec3(1, 0, 1); // Should not happen
   return c;
 }
 
