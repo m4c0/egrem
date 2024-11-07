@@ -149,6 +149,19 @@ vec3 piggy(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 shroom(vec2 p, vec3 c) {
+  float d;
+  d = sd_uneven_capsule(p + vec2(0.0, 0.05), 0.05, 0.10, 0.2);
+  c = mix(vec3(0.9, 0.6, 0.4), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  p.x *= 0.5;
+  d = sd_uneven_capsule(p + vec2(0.0, 0.2), 0.05, 0.10, 0.1);
+  c = mix(vec3(0.5, 0.2, 0.1), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.01, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) {} // b_empty
   else if (map.r == 1) c = sheep(p, c);
@@ -158,6 +171,7 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   else if (map.r == 5) c = fabric(p, c);
   else if (map.r == 6) c = shorts(p, c);
   else if (map.r == 7) c = piggy(p, c);
+  else if (map.r == 8) c = shroom(p, c);
   else c = vec3(1, 0, 1); // Should not happen
   return c;
 }
