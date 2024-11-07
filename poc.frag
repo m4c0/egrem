@@ -113,11 +113,17 @@ vec3 fabric(vec2 p, vec3 c) {
 
 vec3 shorts(vec2 p, vec3 c) {
   p.x = -abs(p.x);
-  p.y += 0.03;
+  p.y += 0.02;
   float d = sd_oriented_box(p, vec2(-0.15, 0.20), vec2(-0.05, -0.15), 0.25);
   d = min(d, sd_oriented_box(p, vec2(-0.17, -0.15), vec2(0.1, -0.15), 0.12));
 
-  c = mix(vec3(0.3, 0.1, 0.4), c, step(0, d));
+  float s = 0.1;
+  vec2 r = p - s * round(p / s);
+  float dd = sd_circle(r, 0.03);
+  const vec3 bc = vec3(0.3, 0.1, 0.4);
+  vec3 cc = mix(bc * 1.3, bc, step(0, dd));
+
+  c = mix(cc, c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
   return c;
 }
