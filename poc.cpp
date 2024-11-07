@@ -20,6 +20,7 @@ enum block : uint8_t {
   b_wool   = 3,
   b_thread = 4,
   b_fabric = 5,
+  b_shorts = 6,
 };
 
 struct upc {
@@ -60,7 +61,8 @@ static constexpr auto g_movers = [] {
   res.data[b_sheep][b_empty] = spawn<b_wool>;
   res.data[b_wool][b_wool] = merge<b_thread>;
   res.data[b_thread][b_thread] = merge<b_fabric>;
-  res.data[b_fabric][b_fabric] = merge<b_empty>;
+  res.data[b_fabric][b_fabric] = merge<b_shorts>;
+  res.data[b_shorts][b_shorts] = merge<b_empty>;
 
   return res;
 }();
@@ -216,7 +218,7 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[3][5] = b_sheep;
-    g_map[4][5] = b_fabric;
+    g_map[4][5] = b_shorts;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {

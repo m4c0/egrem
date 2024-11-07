@@ -111,6 +111,17 @@ vec3 fabric(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 shorts(vec2 p, vec3 c) {
+  p.x = -abs(p.x);
+  p.y += 0.03;
+  float d = sd_oriented_box(p, vec2(-0.15, 0.20), vec2(-0.05, -0.15), 0.25);
+  d = min(d, sd_oriented_box(p, vec2(-0.17, -0.15), vec2(0.1, -0.15), 0.12));
+
+  c = mix(vec3(0.3, 0.1, 0.4), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) {} // b_empty
   else if (map.r == 1) c = sheep(p, c);
@@ -118,6 +129,7 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   else if (map.r == 3) c = wool(p, c);
   else if (map.r == 4) c = thr(p, c);
   else if (map.r == 5) c = fabric(p, c);
+  else if (map.r == 6) c = shorts(p, c);
   else c = vec3(1, 0, 1); // Should not happen
   return c;
 }
