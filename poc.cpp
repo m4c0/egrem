@@ -95,10 +95,11 @@ static void update_grid(voo::h2l_image * img) {
   auto ptr = static_cast<pix *>(*mem);
   for (unsigned char y = 0; y < 16; y++) {
     for (unsigned char x = 0; x < 16; x++, ptr++) {
+      dotz::ivec2 p { x, y };
       auto blk = g_map[y][x];
       auto valid_target = g_pc.drag_origin == nil
         ? can_drag(blk)
-        : can_drop(map(g_pc.drag_origin), blk);
+        : (g_pc.drag_origin != p) && can_drop(map(g_pc.drag_origin), blk);
 
       ptr->r = blk;
       ptr->g = valid_target;
