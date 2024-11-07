@@ -94,7 +94,7 @@ vec3 thr(vec2 p, vec3 c) {
 
   vec3 cc = vec3(1.0, 0.9, 0.8);
   float ss = sin(p.y * 314) * 0.3 + 0.7;
-  d = sd_rnd_box(p, vec2(0.20, 0.13), 0.06);
+  d = sd_box(p, vec2(0.20, 0.13)) - 0.06;
   c = mix(cc * ss, c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
   return c;
@@ -128,6 +128,27 @@ vec3 shorts(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 piggy(vec2 p, vec3 c) {
+  p.x = abs(p.x);
+  p.y -= 0.04;
+
+  float d;
+  d = sd_rnd_box(p - vec2(0.15, -0.15), vec2(0.13, 0.1), vec4(0.1, 0.02, 0.1, 0.1));
+  c = mix(vec3(0.9, 0.3, 0.2), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_circle(p * vec2(1.0, 1.3), 0.25);
+  c = mix(vec3(0.9, 0.3, 0.2), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_circle(p * vec2(1.0, 1.3), 0.13);
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_box(p - vec2(0.05, 0.0), vec2(0.01, 0.0)) - 0.02;
+  c = mix(vec3(0), c, step(0, d));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) {} // b_empty
   else if (map.r == 1) c = sheep(p, c);
@@ -136,6 +157,7 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   else if (map.r == 4) c = thr(p, c);
   else if (map.r == 5) c = fabric(p, c);
   else if (map.r == 6) c = shorts(p, c);
+  else if (map.r == 7) c = piggy(p, c);
   else c = vec3(1, 0, 1); // Should not happen
   return c;
 }
@@ -153,7 +175,7 @@ vec4 cell_box(vec2 p, bool sel, bool drag_o, uvec4 map) {
   vec3 border = sel ? vec3(1) : vec3(0.7);
   float border_w = map.g == 0 ? 0.02 : 0.03;
 
-  float d = sd_rnd_box(p, vec2(0.3), 0.1);
+  float d = sd_box(p, vec2(0.3)) - 0.1;
 
   vec3 c = cell_sprite(p, inside, map);
   c = mix(c, inside, drag_o ? 0.7 : 0.0);

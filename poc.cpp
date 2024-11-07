@@ -21,6 +21,7 @@ enum block : uint8_t {
   b_thread = 4,
   b_fabric = 5,
   b_shorts = 6,
+  b_pig    = 7,
 };
 
 struct upc {
@@ -218,7 +219,7 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[3][5] = b_sheep;
-    g_map[4][5] = b_shorts;
+    g_map[4][5] = b_pig;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
