@@ -38,6 +38,7 @@ struct upc {
 
 // TODO: reduce map to 9x9
 static block g_map[16][16];
+static block g_unlocks[16][16];
 static hai::fn<void> g_redraw_map;
 
 using mover_t = void (*)(block & from, block & to);
@@ -112,6 +113,7 @@ static void update_grid(voo::h2l_image * img) {
 
       ptr->r = blk;
       ptr->g = valid_target;
+      ptr->b = g_unlocks[y][x];
       if (blk != b_locked) {
         ptr->a = 255;
         continue;
@@ -227,6 +229,8 @@ struct init {
     g_map[3][5] = b_sheep;
     g_map[4][5] = b_pig;
     g_map[5][5] = b_soup;
+
+    g_unlocks[6][4] = b_thread;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
