@@ -23,6 +23,7 @@ enum block : uint8_t {
   b_shorts = 6,
   b_pig    = 7,
   b_shroom = 8,
+  b_soup   = 9,
 };
 
 struct upc {
@@ -67,7 +68,8 @@ static constexpr auto g_movers = [] {
   res.data[b_shorts][b_shorts] = merge<b_empty>;
 
   res.data[b_pig][b_empty] = spawn<b_shroom>;
-  res.data[b_shroom][b_shroom] = merge<b_empty>;
+  res.data[b_shroom][b_shroom] = merge<b_soup>;
+  res.data[b_soup][b_soup] = merge<b_empty>;
 
   return res;
 }();
@@ -224,7 +226,7 @@ struct init {
 
     g_map[3][5] = b_sheep;
     g_map[4][5] = b_pig;
-    g_map[5][5] = b_shroom;
+    g_map[5][5] = b_soup;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {

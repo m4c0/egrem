@@ -162,6 +162,25 @@ vec3 shroom(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 soup(vec2 p, vec3 c) {
+  p.y += 0.07;
+
+  float d;
+  d = sd_cut_disk(p, 0.3, 0.0);
+  c = mix(vec3(0.6, 0.8, 0.9), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_circle(p * vec2(1.0, 2.0), 0.3);
+  c = mix(vec3(0.6, 0.8, 0.9), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_circle(p * vec2(1.0, 2.0), 0.25);
+  vec3 cc = vec3(0.7, 0.5, 0.3) * (sin(d * 60) * 0.1 + 0.9);
+  c = mix(cc, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   if (map.r == 0) {} // b_empty
   else if (map.r == 1) c = sheep(p, c);
@@ -172,6 +191,7 @@ vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
   else if (map.r == 6) c = shorts(p, c);
   else if (map.r == 7) c = piggy(p, c);
   else if (map.r == 8) c = shroom(p, c);
+  else if (map.r == 9) c = soup(p, c);
   else c = vec3(1, 0, 1); // Should not happen
   return c;
 }
