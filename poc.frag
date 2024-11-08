@@ -27,13 +27,6 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
-vec3 locked(vec2 p, vec3 c) {
-  float d = sd_rnd_x(p, 1.0, 0.05);
-  vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
-  c = mix(xc, c, step(0, d) * 0.3 + 0.7);
-  return c;
-}
-
 vec3 sheep_body(vec2 p, vec3 c) {
   p.y *= -1;
   p.y += 0.05;
@@ -181,19 +174,34 @@ vec3 soup(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 cell_sprite(vec2 p, vec3 c, vec4 map) {
-  if (map.r == 0) {} // b_empty
-  else if (map.r == 1) c = sheep(p, c);
-  else if (map.r == 2) c = locked(p, c);
-  else if (map.r == 3) c = wool(p, c);
-  else if (map.r == 4) c = thr(p, c);
-  else if (map.r == 5) c = fabric(p, c);
-  else if (map.r == 6) c = shorts(p, c);
-  else if (map.r == 7) c = piggy(p, c);
-  else if (map.r == 8) c = shroom(p, c);
-  else if (map.r == 9) c = soup(p, c);
-  else c = vec3(1, 0, 1); // Should not happen
+vec3 locked(vec2 p, vec3 c) {
+  float d = sd_rnd_x(p, 1.0, 0.05);
+  vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
+  c = mix(xc, c, step(0, d) * 0.3 + 0.7);
   return c;
+}
+
+vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
+  if (spr == 0) return c; // b_empty
+  else if (spr == 1) return sheep(p, c);
+  else if (spr == 2) return c; // b_locked
+  else if (spr == 3) return wool(p, c);
+  else if (spr == 4) return thr(p, c);
+  else if (spr == 5) return fabric(p, c);
+  else if (spr == 6) return shorts(p, c);
+  else if (spr == 7) return piggy(p, c);
+  else if (spr == 8) return shroom(p, c);
+  else if (spr == 9) return soup(p, c);
+  else return vec3(1, 0, 1); // Should not happen
+}
+
+vec3 cell_sprite(vec2 p, vec3 c, uvec4 map) {
+  if (map.r == 2) {
+    c = mix(c, non_locked_sprite(p, c, map.b), 0.3);
+    return locked(p, c);
+  } else {
+    return non_locked_sprite(p, c, map.r);
+  }
 }
 
 vec3 drag_cursor(vec3 c) {
