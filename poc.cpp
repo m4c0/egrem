@@ -90,9 +90,11 @@ static bool can_drag(block b) {
     default:       return true;
   }
 }
-static bool can_drop(block from, block to) {
+static bool can_drop(dotz::ivec2 p) {
+  block from = map(g_pc.drag_origin);
+  block to = map(p);
   switch (to) {
-    case b_locked: return false;
+    case b_locked: return g_unlocks[p.y][p.x] == from;
     case b_empty:  return true;
     default:       return g_movers.data[from][to] != ignore;
   }
@@ -109,7 +111,7 @@ static void update_grid(voo::h2l_image * img) {
       auto blk = g_map[y][x];
       auto valid_target = g_pc.drag_origin == nil
         ? can_drag(blk)
-        : (g_pc.drag_origin != p) && can_drop(map(g_pc.drag_origin), blk);
+        : (g_pc.drag_origin != p) && can_drop(p);
 
       ptr->r = blk;
       ptr->g = valid_target;
@@ -226,9 +228,8 @@ struct init {
       for (auto x = 3; x < 6; x++)
         g_map[y][x] = b_empty;
 
-    g_map[3][5] = b_sheep;
-    g_map[4][5] = b_pig;
-    g_map[5][5] = b_soup;
+    g_map[4][4] = b_sheep;
+    g_map[5][5] = b_thread;
 
     g_unlocks[6][4] = b_thread;
 
