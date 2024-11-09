@@ -31,9 +31,9 @@ struct upc {
   dotz::ivec2 sel_idx {};
   dotz::ivec2 drag_origin = nil;
   dotz::vec2 drag_pos = nil;
+  dotz::vec2 grid_scale {};
+  dotz::vec2 grid_center {};
   float aspect;
-  // TODO: change scale after unlocking parts of map
-  float scale = 3.0;
 } g_pc;
 
 // TODO: reduce map to 9x9
@@ -102,12 +102,16 @@ static bool can_drop(dotz::ivec2 p) {
 static void update_grid(voo::h2l_image * img) {
   struct pix { unsigned char r, g, b, a; };
 
+  dotz::ivec2 left { 16 };
+  dotz::ivec2 right {};
+
   voo::mapmem mem { img->host_memory() };
   auto ptr = static_cast<pix *>(*mem);
   for (unsigned char y = 0; y < 16; y++) {
     for (unsigned char x = 0; x < 16; x++, ptr++) {
       dotz::ivec2 p { x, y };
       auto blk = g_map[y][x];
+
       auto valid_target = g_pc.drag_origin == nil
         ? can_drag(blk)
         : (g_pc.drag_origin != p) && can_drop(p);
@@ -125,8 +129,17 @@ static void update_grid(voo::h2l_image * img) {
       if (x < 15 && g_map[y][x + 1] != b_locked) a++;
       if (y < 15 && g_map[y + 1][x] != b_locked) a++;
       ptr->a = a > 0 ? 255 : 0;
+
+      if (ptr->a > 0) {
+        left = dotz::min(left, p);
+        right = dotz::max(right, p + 1);
+      }
     }
   }
+
+  auto scale = (right - left + 1) / 2.0f;
+  g_pc.grid_scale = dotz::vec2 { dotz::max(scale.x, scale.y) };
+  g_pc.grid_center = (right + left) / 2.0f - 0.5f;
 }
 
 struct thread : voo::casein_thread {

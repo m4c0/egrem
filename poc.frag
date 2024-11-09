@@ -13,13 +13,13 @@ layout(location = 0) out vec4 frag_colour;
 layout(location = 1) out vec4 frag_id;
 
 vec4 op_rep(vec2 p) {
-  const float count = 9; // number of squares
+  const float map_size = 16;
   const float s = 1.0; // size of each square
 
-  p = p * pc.scale + (count - 1) / 2.0;
+  p = p * pc.grid_scale + pc.grid_center;
 
   vec2 id = round(p / s);
-  id = clamp(id, 0, count - 1);
+  id = clamp(id, 0, map_size - 1);
 
   vec2 r = p - s * id;
   return vec4(r, id);
