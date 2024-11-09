@@ -48,6 +48,7 @@ template<block b>
 static constexpr auto merge = [](auto & f, auto & t) { t = b; f = b_empty; };
 
 static constexpr auto ignore = [](auto, auto) {};
+static constexpr auto move = [](auto & f, auto & t) { t = f; f = b_empty; };
 
 static constexpr auto g_movers = [] {
   struct {
@@ -56,10 +57,8 @@ static constexpr auto g_movers = [] {
   for (auto & row : res.data) {
     for (auto & m : row) m = ignore;
 
-    row[b_empty] = [](auto & f, auto & t) {
-      t = f;
-      f = b_empty;
-    };
+    row[b_empty] = move;
+    row[b_locked] = move;
   }
 
   res.data[b_sheep][b_empty] = spawn<b_wool>;
@@ -80,7 +79,7 @@ static auto map(dotz::ivec2 p) {
   return g_map[p.y][p.x];
 }
 
-static void move(block & from, block & to) {
+static void drop(block & from, block & to) {
   g_movers.data[from][to](from, to);
 }
 static bool can_drag(block b) {
@@ -209,7 +208,7 @@ static void drag_end() {
   if (g_pc.drag_origin != nil && g_pc.selection != nil) {
     auto & o = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
     auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
-    move(o, t);
+    drop(o, t);
   }
   g_pc.drag_origin = nil;
   g_pc.drag_pos = nil;
