@@ -60,7 +60,7 @@ static constexpr auto g_movers = [] {
     for (auto & m : row) m = ignore;
 
     row[b_empty] = move;
-    row[b_locked] = move;
+    row[b_locked] = merge<b_empty>;
   }
 
   res.data[b_sheep][b_empty] = spawn<b_wool>;
