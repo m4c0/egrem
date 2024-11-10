@@ -1,6 +1,8 @@
 #pragma leco app
 #pragma leco add_shader "poc.frag"
 #pragma leco add_shader "poc.vert"
+#pragma leco portrait
+#pragma leco landscape
 
 import casein;
 import dotz;
