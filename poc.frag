@@ -145,6 +145,21 @@ vec3 outfit(vec2 p, vec3 c) {
 }
 
 vec3 store(vec2 p, vec3 c) {
+  float d;
+
+  d = sd_box(p - vec2(0, 0.10), vec2(0.24, 0.15));
+  c = mix(vec3(0.5, 0.3, 0.0), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_box(p + vec2(0, 0.15), vec2(0.26, 0.1));
+  float shd = sin(p.x * 200) * 0.3 + 0.7;
+  c = mix(vec3(0.0, 0.05, 0.3) * shd, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_box(p - vec2(-0.06, 0.13), vec2(0.1, 0.12));
+  c = mix(vec3(0.3, 0.1, 0.0), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
   return c;
 }
 
