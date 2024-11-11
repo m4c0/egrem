@@ -246,11 +246,10 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[4][4] = b_sheep;
-    g_map[5][5] = b_shorts;
-    g_map[3][5] = b_store;
-    g_map[3][3] = b_outfit;
 
-    g_unlocks[6][4] = b_thread;
+    g_unlocks[6][4] = b_wool;
+    g_unlocks[6][3] = b_thread;
+    g_unlocks[6][5] = b_shorts;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
