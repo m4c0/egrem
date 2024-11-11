@@ -104,11 +104,16 @@ vec3 fabric(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 shorts(vec2 p, vec3 c) {
+float sd_shorts(vec2 p) {
   p.x = -abs(p.x);
   p.y += 0.02;
   float d = sd_oriented_box(p, vec2(-0.15, 0.20), vec2(-0.05, -0.15), 0.25);
   d = min(d, sd_oriented_box(p, vec2(-0.17, -0.15), vec2(0.1, -0.15), 0.12));
+  return d;
+}
+
+vec3 shorts(vec2 p, vec3 c) {
+  float d = sd_shorts(p);
 
   float s = 0.1;
   vec2 r = p - s * round(p / s);
@@ -118,6 +123,28 @@ vec3 shorts(vec2 p, vec3 c) {
 
   c = mix(cc, c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
+// TODO: maybe a known outfit (which can be merged into more easter eggs?)
+vec3 outfit(vec2 p, vec3 c) {
+  vec2 sp = p;
+  sp.y -= 0.15;
+  sp *= 1.4;
+  float d = sd_shorts(sp);
+  c = mix(vec3(0.1, 0.1, 0.3), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_box(p + vec2(0, 0.1), vec2(0.15, 0.15));
+  d = min(d, sd_box(p + vec2(0, 0.16), vec2(0.22, 0.09)));
+  d = max(d, -sd_circle(p + vec2(0, 0.24), 0.07));
+  c = mix(vec3(0.2, 0.6, 0.3), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  return c;
+}
+
+vec3 store(vec2 p, vec3 c) {
   return c;
 }
 
@@ -192,6 +219,8 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 7) return piggy(p, c);
   else if (spr == 8) return shroom(p, c);
   else if (spr == 9) return soup(p, c);
+  else if (spr == 10) return outfit(p, c);
+  else if (spr == 11) return store(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 

@@ -26,6 +26,8 @@ enum block : uint8_t {
   b_pig    = 7,
   b_shroom = 8,
   b_soup   = 9,
+  b_outfit = 10,
+  b_store  = 11,
 };
 
 struct upc {
@@ -67,7 +69,8 @@ static constexpr auto g_movers = [] {
   res.data[b_wool][b_wool] = merge<b_thread>;
   res.data[b_thread][b_thread] = merge<b_fabric>;
   res.data[b_fabric][b_fabric] = merge<b_shorts>;
-  res.data[b_shorts][b_shorts] = merge<b_empty>;
+  res.data[b_shorts][b_shorts] = merge<b_outfit>;
+  res.data[b_outfit][b_outfit] = merge<b_store>;
 
   res.data[b_pig][b_empty] = spawn<b_shroom>;
   res.data[b_shroom][b_shroom] = merge<b_soup>;
@@ -243,7 +246,9 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[4][4] = b_sheep;
-    g_map[5][5] = b_thread;
+    g_map[5][5] = b_shorts;
+    g_map[3][5] = b_store;
+    g_map[3][3] = b_outfit;
 
     g_unlocks[6][4] = b_thread;
 
