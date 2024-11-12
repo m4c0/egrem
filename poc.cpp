@@ -225,7 +225,7 @@ static void drag_move() {
   g_pc.sel_idx.x = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
 }
 static void drag_end() {
-  if (g_pc.drag_origin != nil && g_pc.selection != nil) {
+  if (g_pc.drag_origin != nil && g_pc.selection != nil && g_pc.drag_origin != g_pc.selection) {
     auto & o = g_map[g_pc.drag_origin.y][g_pc.drag_origin.x];
     auto & t = g_map[g_pc.selection.y][g_pc.selection.x];
     drop(o, t);
