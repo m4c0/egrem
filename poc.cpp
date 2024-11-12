@@ -11,6 +11,8 @@ import traits;
 import vee;
 import voo;
 
+// TODO: check if player is out of moves
+
 using namespace traits::ints;
 
 static constexpr const dotz::ivec2 nil { 10000 };
@@ -77,6 +79,8 @@ static constexpr auto g_movers = [] {
   res.data[b_pig][b_empty] = spawn<b_shroom>;
   res.data[b_shroom][b_shroom] = merge<b_soup>;
   res.data[b_soup][b_soup] = merge<b_empty>;
+
+  // res.data[b_shorts][b_soup] = merge<b_egg>;
 
   return res;
 }();
