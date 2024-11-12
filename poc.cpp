@@ -43,6 +43,7 @@ struct upc {
 // TODO: reduce map to 9x9
 static block g_map[16][16];
 static block g_unlocks[16][16];
+static block g_prizes[256] {};
 static hai::fn<void> g_redraw_map;
 
 using mover_t = void (*)(block & from, block & to);
@@ -53,6 +54,7 @@ static constexpr auto merge = [](auto & f, auto & t) { t = b; f = b_empty; };
 
 static constexpr auto ignore = [](auto, auto) {};
 static constexpr auto move = [](auto & f, auto & t) { t = f; f = b_empty; };
+static constexpr auto unlock = [](auto & f, auto & t) { t = g_prizes[f]; f = b_empty; };
 
 static constexpr auto g_movers = [] {
   struct {
@@ -62,7 +64,7 @@ static constexpr auto g_movers = [] {
     for (auto & m : row) m = ignore;
 
     row[b_empty] = move;
-    row[b_locked] = merge<b_empty>;
+    row[b_locked] = unlock;
   }
 
   res.data[b_sheep][b_empty] = spawn<b_wool>;
@@ -249,7 +251,9 @@ struct init {
 
     g_unlocks[6][4] = b_wool;
     g_unlocks[6][3] = b_thread;
-    g_unlocks[6][5] = b_shorts;
+    g_unlocks[6][5] = b_store;
+
+    g_prizes[b_store] = b_pig;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
