@@ -30,6 +30,7 @@ enum block : uint8_t {
   b_soup   = 9,
   b_outfit = 10,
   b_store  = 11,
+  b_egg    = 12,
 };
 
 struct upc {
@@ -80,7 +81,7 @@ static constexpr auto g_movers = [] {
   res.data[b_shroom][b_shroom] = merge<b_soup>;
   res.data[b_soup][b_soup] = merge<b_empty>;
 
-  // res.data[b_shorts][b_soup] = merge<b_egg>;
+  res.data[b_shorts][b_soup] = merge<b_egg>;
 
   return res;
 }();

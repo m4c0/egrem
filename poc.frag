@@ -216,6 +216,19 @@ vec3 soup(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 egg(vec2 p, vec3 c) {
+  float h = round(0.2 * sin(20 * p.x) + 6.0 + p.y * 9.0) / 9.0;
+  vec3 cc = hsv2rgb(vec3(h, 0.9, 0.6));
+
+  p.y *= -1;
+  p.y += 0.03;
+
+  float d = sd_egg(p, 0.2, 0.1);
+  c = mix(cc, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -236,6 +249,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 9) return soup(p, c);
   else if (spr == 10) return outfit(p, c);
   else if (spr == 11) return store(p, c);
+  else if (spr == 12) return egg(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
