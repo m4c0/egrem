@@ -93,17 +93,6 @@ vec3 thr(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 fabric(vec2 p, vec3 c) {
-  float d = sd_box(p - vec2(0, 0.05), vec2(0.20, 0.10)) - 0.05;
-  c = mix(vec3(0.3, 0.1, 0.4), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
-
-  d = sd_rhombus(p + vec2(0, 0.1), vec2(0.25, 0.13)) - 0.05;
-  c = mix(vec3(0.1, 0.4, 0.3), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
-  return c;
-}
-
 float sd_shorts(vec2 p) {
   p.x = -abs(p.x);
   p.y += 0.02;
@@ -242,7 +231,6 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 2) return c; // b_locked
   else if (spr == 3) return wool(p, c);
   else if (spr == 4) return thr(p, c);
-  else if (spr == 5) return fabric(p, c);
   else if (spr == 6) return shorts(p, c);
   else if (spr == 7) return piggy(p, c);
   else if (spr == 8) return shroom(p, c);
