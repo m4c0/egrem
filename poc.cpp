@@ -255,8 +255,10 @@ struct init {
 
     g_map[4][4] = b_sheep;
 
-    g_unlocks[6][4] = b_wool;
+    g_unlocks[4][6] = b_soup;
+    g_unlocks[5][6] = b_egg;
     g_unlocks[6][3] = b_thread;
+    g_unlocks[6][4] = b_wool;
     g_unlocks[6][5] = b_store;
 
     g_prizes[b_store] = b_pig;
