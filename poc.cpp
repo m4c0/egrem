@@ -23,6 +23,7 @@ enum block : uint8_t {
   b_locked = 2,
   b_wool   = 3,
   b_thread = 4,
+  b_hat    = 5,
   b_shorts = 6,
   b_pig    = 7,
   b_shroom = 8,
@@ -83,6 +84,8 @@ static constexpr auto g_movers = [] {
   res.data[b_soup][b_soup] = merge<b_empty>;
 
   res.data[b_shorts][b_soup] = merge<b_egg>;
+
+  res.data[b_straw][b_straw] = merge<b_hat>;
 
   return res;
 }();
