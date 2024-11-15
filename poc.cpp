@@ -35,7 +35,7 @@ enum block : uint8_t {
   b_stick  = 14, // TODO
   b_brick  = 15, // TODO
   b_fan    = 16, // TODO
-  b_trash  = 17, // TODO
+  b_trash  = 17,
 };
 
 struct upc {
