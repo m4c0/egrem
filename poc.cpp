@@ -32,9 +32,10 @@ enum block : uint8_t {
   b_store  = 11,
   b_egg    = 12,
   b_straw  = 13,
-  b_stick  = 14,
-  b_brick  = 15,
-  b_fan    = 16,
+  b_stick  = 14, // TODO
+  b_brick  = 15, // TODO
+  b_fan    = 16, // TODO
+  b_trash  = 17, // TODO
 };
 
 struct upc {
@@ -62,6 +63,7 @@ static constexpr auto merge = [](auto & f, auto & t) { t = b; f = b_empty; };
 static constexpr auto ignore = [](auto, auto) {};
 static constexpr auto move = [](auto & f, auto & t) { t = f; f = b_empty; };
 static constexpr auto unlock = [](auto & f, auto & t) { t = g_prizes[f]; f = b_empty; };
+static constexpr auto trash = [](auto & f, auto & t) { f = b_empty; };
 
 static constexpr auto g_movers = [] {
   struct {
@@ -72,6 +74,11 @@ static constexpr auto g_movers = [] {
 
     row[b_empty] = move;
     row[b_locked] = unlock;
+  }
+  for (auto i = 0; i < 256; i++) {
+    if (i == b_pig) continue;
+    if (i == b_sheep) continue;
+    res.data[i][b_trash] = trash;
   }
 
   res.data[b_sheep][b_empty] = spawn<b_wool>;
@@ -272,6 +279,7 @@ struct init {
     g_unlocks[6][5] = b_store;
 
     g_prizes[b_store] = b_pig;
+    g_prizes[b_egg] = b_trash;
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
