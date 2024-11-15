@@ -89,7 +89,6 @@ static constexpr auto g_movers = [] {
 
   res.data[b_pig][b_empty] = spawn<b_shroom>;
   res.data[b_shroom][b_shroom] = merge<b_soup>;
-  res.data[b_soup][b_soup] = merge<b_empty>;
 
   res.data[b_shorts][b_soup] = merge<b_egg>;
 
@@ -97,8 +96,9 @@ static constexpr auto g_movers = [] {
   res.data[b_straw][b_straw] = merge<b_hat>;
   res.data[b_hat][b_hat] = merge<b_fan>;
 
-  res.data[b_hat][b_store] = merge<b_stick>;
-  res.data[b_store][b_hat] = merge<b_stick>;
+  res.data[b_pig][b_fan] = spawn<b_stick>;
+
+  // TODO: pig's brick house
 
   return res;
 }();
