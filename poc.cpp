@@ -34,6 +34,7 @@ enum block : uint8_t {
   b_straw  = 13,
   b_stick  = 14,
   b_brick  = 15,
+  b_fan    = 16,
 };
 
 struct upc {
@@ -87,6 +88,10 @@ static constexpr auto g_movers = [] {
 
   res.data[b_pig][b_store] = spawn<b_straw>;
   res.data[b_straw][b_straw] = merge<b_hat>;
+  res.data[b_hat][b_hat] = merge<b_fan>;
+
+  res.data[b_hat][b_store] = merge<b_stick>;
+  res.data[b_store][b_hat] = merge<b_stick>;
 
   return res;
 }();
