@@ -204,6 +204,8 @@ vec3 soup(vec2 p, vec3 c) {
   return c;
 }
 
+const vec3 straw_colour = vec3(0.6, 0.4, 0.1);
+
 vec3 straw(vec2 p, vec3 c) {
   float d;
   p.y += 0.1;
@@ -212,13 +214,30 @@ vec3 straw(vec2 p, vec3 c) {
   p.y += 0.1;
   d = min(d, sd_iso_triangle(p, vec2(0.2, 0.2)));
 
-  c = mix(vec3(0.6, 0.4, 0.1), c, step(0, d));
+  c = mix(straw_colour, c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
 
   d = sd_box(p - vec2(0, 0.05), vec2(0.1, 0.05));
   c = mix(vec3(0.7, 0.05, 0.0), c, step(0, d));
   c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
 
+  return c;
+}
+
+vec3 hat(vec2 p, vec3 c) {
+  float d;
+  d = sd_circle(p * vec2(1.0, 2.0), 0.3);
+  c = mix(straw_colour, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  float d1 = sd_circle(p * vec2(1.0, 0.8), 0.15);
+  p.y += 0.15;
+  float d2 = sd_circle(p * vec2(1.0, 1.5), 0.3);
+  d = max(d1, d2);
+  
+  vec3 cc = mix(straw_colour, vec3(0.5, 0.05, 0.0), step(-0.1, d2));
+  c = mix(cc, c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
   return c;
 }
 
@@ -248,6 +267,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 2) return c; // b_locked
   else if (spr == 3) return wool(p, c);
   else if (spr == 4) return thr(p, c);
+  else if (spr == 5) return hat(p, c);
   else if (spr == 6) return shorts(p, c);
   else if (spr == 7) return piggy(p, c);
   else if (spr == 8) return shroom(p, c);
