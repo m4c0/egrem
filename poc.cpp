@@ -85,6 +85,7 @@ static constexpr auto g_movers = [] {
 
   res.data[b_shorts][b_soup] = merge<b_egg>;
 
+  res.data[b_pig][b_store] = spawn<b_straw>;
   res.data[b_straw][b_straw] = merge<b_hat>;
 
   return res;

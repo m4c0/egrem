@@ -115,7 +115,6 @@ vec3 shorts(vec2 p, vec3 c) {
   return c;
 }
 
-// TODO: maybe a known outfit (which can be merged into more easter eggs?)
 vec3 outfit(vec2 p, vec3 c) {
   vec2 sp = p;
   sp.y -= 0.15;
@@ -205,6 +204,24 @@ vec3 soup(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 straw(vec2 p, vec3 c) {
+  float d;
+  p.y += 0.1;
+  d = sd_iso_triangle(p, vec2(0.25, 0.3));
+  p *= -1.0;
+  p.y += 0.1;
+  d = min(d, sd_iso_triangle(p, vec2(0.2, 0.2)));
+
+  c = mix(vec3(0.6, 0.4, 0.1), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  d = sd_box(p - vec2(0, 0.05), vec2(0.1, 0.05));
+  c = mix(vec3(0.7, 0.05, 0.0), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+
+  return c;
+}
+
 vec3 egg(vec2 p, vec3 c) {
   float h = round(0.2 * sin(20 * p.x) + 6.0 + p.y * 9.0) / 9.0;
   vec3 cc = hsv2rgb(vec3(h, 0.9, 0.6));
@@ -238,6 +255,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 10) return outfit(p, c);
   else if (spr == 11) return store(p, c);
   else if (spr == 12) return egg(p, c);
+  else if (spr == 13) return straw(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
