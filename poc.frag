@@ -224,6 +224,13 @@ vec3 straw(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 stick(vec2 p, vec3 c) {
+  float d = sd_segment(p, vec2(0.2, -0.2), vec2(-0.2, 0.2)) - 0.02;
+  c = mix(vec3(0.5, 0.15, 0.0), c, step(0, d));
+  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  return c;
+}
+
 vec3 hat(vec2 p, vec3 c) {
   float d;
   d = sd_circle(p * vec2(1.0, 2.0), 0.3);
@@ -295,6 +302,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 11) return store(p, c);
   else if (spr == 12) return egg(p, c);
   else if (spr == 13) return straw(p, c);
+  else if (spr == 14) return stick(p, c);
   else if (spr == 17) return trash(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }

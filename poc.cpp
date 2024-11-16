@@ -32,7 +32,7 @@ enum block : uint8_t {
   b_store  = 11,
   b_egg    = 12,
   b_straw  = 13,
-  b_stick  = 14, // TODO
+  b_stick  = 14, // TODO: wire
   b_brick  = 15, // TODO
   b_fan    = 16, // TODO
   b_trash  = 17,
