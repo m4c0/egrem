@@ -27,12 +27,16 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
+vec3 c_border(vec2 p, vec3 c, float d) {
+  return mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+}
+
 vec3 sheep_body(vec2 p, vec3 c) {
   p.y *= -1;
   p.y += 0.05;
   float d = sd_cut_disk(p, 0.25, -0.15);
   c = mix(vec3(0.8, 0.7, 0.6), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 vec3 sheep_feet(vec2 p, vec3 c) {
@@ -76,20 +80,20 @@ vec3 wool(vec2 p, vec3 c) {
 
   float d = min(wool_circle(r1), wool_circle(r2));
   c = mix(vec3(1.0, 0.9, 0.8), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
 vec3 thr(vec2 p, vec3 c) {
   float d = sd_box(p, vec2(0.15, 0.25));
   c = mix(vec3(0.4, 0.3, 0.1), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   vec3 cc = vec3(1.0, 0.9, 0.8);
   float ss = sin(p.y * 314) * 0.3 + 0.7;
   d = sd_box(p, vec2(0.20, 0.13)) - 0.06;
   c = mix(cc * ss, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -111,7 +115,7 @@ vec3 shorts(vec2 p, vec3 c) {
   vec3 cc = mix(bc * 1.3, bc, step(0, dd));
 
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -121,13 +125,13 @@ vec3 outfit(vec2 p, vec3 c) {
   sp *= 1.4;
   float d = sd_shorts(sp);
   c = mix(vec3(0.1, 0.1, 0.3), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p + vec2(0, 0.1), vec2(0.15, 0.15));
   d = min(d, sd_box(p + vec2(0, 0.16), vec2(0.22, 0.09)));
   d = max(d, -sd_circle(p + vec2(0, 0.24), 0.07));
   c = mix(vec3(0.2, 0.6, 0.3), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   return c;
 }
@@ -137,16 +141,16 @@ vec3 store(vec2 p, vec3 c) {
 
   d = sd_box(p - vec2(0, 0.10), vec2(0.24, 0.15));
   c = mix(vec3(0.5, 0.3, 0.0), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p + vec2(0, 0.15), vec2(0.26, 0.1));
   float shd = sin(p.x * 200) * 0.3 + 0.7;
   c = mix(vec3(0.0, 0.05, 0.3) * shd, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p - vec2(-0.06, 0.13), vec2(0.1, 0.12));
   c = mix(vec3(0.3, 0.1, 0.0), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   return c;
 }
@@ -158,14 +162,14 @@ vec3 piggy(vec2 p, vec3 c) {
   float d;
   d = sd_rnd_box(p - vec2(0.15, -0.15), vec2(0.13, 0.1), vec4(0.1, 0.02, 0.1, 0.1));
   c = mix(vec3(0.9, 0.3, 0.2), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_circle(p * vec2(1.0, 1.3), 0.25);
   c = mix(vec3(0.9, 0.3, 0.2), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_circle(p * vec2(1.0, 1.3), 0.13);
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p - vec2(0.05, 0.0), vec2(0.01, 0.0)) - 0.02;
   c = mix(vec3(0), c, step(0, d));
@@ -176,7 +180,7 @@ vec3 shroom(vec2 p, vec3 c) {
   float d;
   d = sd_uneven_capsule(p + vec2(0.0, 0.05), 0.05, 0.10, 0.2);
   c = mix(vec3(0.9, 0.6, 0.4), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   p.x *= 0.5;
   d = sd_uneven_capsule(p + vec2(0.0, 0.2), 0.05, 0.10, 0.1);
@@ -191,16 +195,16 @@ vec3 soup(vec2 p, vec3 c) {
   float d;
   d = sd_cut_disk(p, 0.3, 0.0);
   c = mix(vec3(0.6, 0.8, 0.9), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_circle(p * vec2(1.0, 2.0), 0.3);
   c = mix(vec3(0.6, 0.8, 0.9), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_circle(p * vec2(1.0, 2.0), 0.25);
   vec3 cc = vec3(0.7, 0.5, 0.3) * (sin(d * 60) * 0.1 + 0.9);
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -215,11 +219,11 @@ vec3 straw(vec2 p, vec3 c) {
   d = min(d, sd_iso_triangle(p, vec2(0.2, 0.2)));
 
   c = mix(straw_colour, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p - vec2(0, 0.05), vec2(0.1, 0.05));
   c = mix(vec3(0.7, 0.05, 0.0), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   return c;
 }
@@ -227,7 +231,7 @@ vec3 straw(vec2 p, vec3 c) {
 vec3 stick(vec2 p, vec3 c) {
   float d = sd_segment(p, vec2(0.2, -0.2), vec2(-0.2, 0.2)) - 0.02;
   c = mix(vec3(0.5, 0.15, 0.0), c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -235,7 +239,7 @@ vec3 hat(vec2 p, vec3 c) {
   float d;
   d = sd_circle(p * vec2(1.0, 2.0), 0.3);
   c = mix(straw_colour, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   float d1 = sd_circle(p * vec2(1.0, 0.8), 0.15);
   p.y += 0.15;
@@ -244,7 +248,7 @@ vec3 hat(vec2 p, vec3 c) {
   
   vec3 cc = mix(straw_colour, vec3(0.5, 0.05, 0.0), step(-0.1, d2));
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -257,7 +261,7 @@ vec3 egg(vec2 p, vec3 c) {
 
   float d = sd_egg(p, 0.2, 0.1);
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
@@ -265,18 +269,18 @@ vec3 trash(vec2 p, vec3 c) {
   vec3 cc = vec3(0.3, 0.35, 0.4);
   float d = sd_box(p, vec2(0.2, 0.2)) - 0.05;
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p + vec2(0.0, 0.2), vec2(0.24, 0.02)) - 0.05;
   c = mix(cc, c, step(0, d));
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   d = sd_box(p - vec2(0.0, 0.05), vec2(0.01, 0.12)) - 0.03;
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
 
   p.x = abs(p.x);
   d = sd_box(p - vec2(0.15, 0.05), vec2(0.01, 0.12)) - 0.03;
-  c = mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
+  c = c_border(p, c, d);
   return c;
 }
 
