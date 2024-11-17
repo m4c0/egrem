@@ -284,6 +284,24 @@ vec3 trash(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 fan(vec2 p, vec3 c) {
+  vec3 cc = vec3(0.9, 0.5, 0.4);
+
+  float d;
+  d = sd_iso_triangle(p, vec2(0.18, 0.28)) - 0.02;
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_circle(p, 0.25);
+  c = mix(vec3(1), c, step(0, d) * 0.4 + 0.6);
+  c = c_border(p, c, d);
+
+  d = sd_circle(p, 0.07);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -307,6 +325,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 12) return egg(p, c);
   else if (spr == 13) return straw(p, c);
   else if (spr == 14) return stick(p, c);
+  else if (spr == 16) return fan(p, c);
   else if (spr == 17) return trash(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
