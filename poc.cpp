@@ -34,8 +34,9 @@ enum block : uint8_t {
   b_straw  = 13,
   b_stick  = 14, // TODO: wire
   b_brick  = 15, // TODO
-  b_fan    = 16, // TODO
+  b_fan    = 16,
   b_trash  = 17,
+  b_fire   = 18,
 };
 
 struct upc {
@@ -97,6 +98,8 @@ static constexpr auto g_movers = [] {
   res.data[b_hat][b_hat] = merge<b_fan>;
 
   res.data[b_pig][b_fan] = spawn<b_stick>;
+
+  res.data[b_stick][b_stick] = merge<b_fire>;
 
   // TODO: pig's brick house
 
