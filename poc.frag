@@ -302,6 +302,34 @@ vec3 fan(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 fire_head(vec2 p, vec3 c) {
+  p.y -= 0.02;
+  p.y *= -1;
+  p.x += sin(13 * p.y) * 0.05 + 0.0;
+  float d;
+  d = sd_egg(p, 0.16, 0.0);
+  vec3 cc = vec3(
+    1.0,
+    smoothstep(0, -0.2, d),
+    smoothstep(0, -0.5, d)
+  );
+  c = mix(cc, c, step(0, d));
+  return c;
+}
+vec3 fire_base(vec2 p, vec3 c) {
+  p.y -= 0.15;
+  p = abs(p);
+  float d = sd_segment(p, vec2(0.2, 0.1), vec2(-0.2, -0.1)) - 0.02;
+  c = mix(vec3(0.5, 0.15, 0.0), c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+vec3 fire(vec2 p, vec3 c) {
+  c = fire_base(p, c);
+  c = fire_head(p, c);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -327,6 +355,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 14) return stick(p, c);
   else if (spr == 16) return fan(p, c);
   else if (spr == 17) return trash(p, c);
+  else if (spr == 18) return fire(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
