@@ -37,6 +37,8 @@ enum block : uint8_t {
   b_fan    = 16,
   b_trash  = 17,
   b_fire   = 18,
+  b_wall   = 19,
+  b_music  = 20,
 };
 
 struct upc {
@@ -79,6 +81,7 @@ static constexpr auto g_movers = [] {
   for (auto i = 0; i < 256; i++) {
     if (i == b_pig) continue;
     if (i == b_sheep) continue;
+    if (i == b_trash) continue;
     res.data[i][b_trash] = trash;
   }
 
@@ -98,10 +101,11 @@ static constexpr auto g_movers = [] {
   res.data[b_hat][b_hat] = merge<b_fan>;
 
   res.data[b_pig][b_fan] = spawn<b_stick>;
-
   res.data[b_stick][b_stick] = merge<b_fire>;
 
-  // TODO: pig's brick house
+  res.data[b_pig][b_fire] = spawn<b_brick>;
+  res.data[b_brick][b_brick] = spawn<b_wall>;
+  res.data[b_brick][b_wall] = spawn<b_music>;
 
   return res;
 }();
@@ -273,6 +277,9 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[4][4] = b_sheep;
+    g_map[5][3] = b_brick;
+    g_map[5][4] = b_wall;
+    g_map[5][5] = b_music;
 
     g_unlocks[3][6] = b_hat;
     g_unlocks[4][6] = b_soup;
