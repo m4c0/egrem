@@ -265,6 +265,37 @@ vec3 egg(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 brick(vec2 p, vec3 c) {
+  float tx = 1;
+  mat3 rx = mat3(
+    cos(tx),  0, -sin(tx),
+    0,        1, 0,
+    sin(tx),  0, cos(tx)
+  );
+  float ty = 0.5;
+  mat3 ry = mat3(
+    1, 0,       0,
+    0, cos(ty), -sin(ty),
+    0, sin(ty), cos(ty)
+  );
+  float tz = 1;
+  mat3 rz = mat3(
+    cos(tz), -sin(tz), 0, 
+    sin(tz), cos(tz),  0, 
+    0,       0,        1
+  );
+  mat3 rot = rz * ry * rx;
+  float t = -1.0;
+  for (int i = 0; i < 256; i++) {
+    vec3 p3 = rot * vec3(p, t);
+    float h = sd_box_3d(p3, vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
+    if (h < 0.001 || t > 1) break;
+    t += h;
+  }
+  c = mix(vec3(0), c, step(1, t));
+  return c;
+}
+
 vec3 trash(vec2 p, vec3 c) {
   vec3 cc = vec3(0.3, 0.35, 0.4);
   float d = sd_box(p, vec2(0.2, 0.2)) - 0.05;
@@ -356,6 +387,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 16) return fan(p, c);
   else if (spr == 17) return trash(p, c);
   else if (spr == 18) return fire(p, c);
+  else if (spr == 19) return brick(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
