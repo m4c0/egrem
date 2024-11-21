@@ -338,6 +338,27 @@ vec3 brick(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 wall(vec2 p, vec3 c) {
+  vec2 b = p * vec2(8.0, 12.0) + vec2(0.0, 0.0);
+  b.x += 0.5 * step(1.0, mod(b.y, 2));
+
+  vec2 i = floor(b);
+  float h = hash(i);
+  h = smoothstep(0.2, 0.8, h) * 0.3 + 0.5;
+  h = h * (noise(b) * 0.3 + 0.7);
+
+  vec2 f = fract(b) - 0.5;
+  float d = sd_box(f, vec2(0.5, 0.5));
+  d = 1.0 - exp(-16.0 * abs(d));
+
+  vec3 cc = vec3(0.6, 0.3, 0.1) * h * d;
+
+  d = sd_box(p, vec2(0.25));
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 trash(vec2 p, vec3 c) {
   vec3 cc = vec3(0.3, 0.35, 0.4);
   float d = sd_box(p, vec2(0.2, 0.2)) - 0.05;
@@ -430,6 +451,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 17) return trash(p, c);
   else if (spr == 18) return fire(p, c);
   else if (spr == 19) return brick(p, c);
+  else if (spr == 20) return wall(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
