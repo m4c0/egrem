@@ -32,8 +32,8 @@ enum block : uint8_t {
   b_store  = 11,
   b_egg    = 12,
   b_straw  = 13,
-  b_stick  = 14, // TODO: wire
-  b_brick  = 15, // TODO
+  b_stick  = 14,
+  b_brick  = 15,
   b_fan    = 16,
   b_trash  = 17,
   b_fire   = 18,
@@ -277,7 +277,6 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[4][4] = b_sheep;
-    g_map[5][5] = b_music;
 
     g_unlocks[3][6] = b_hat;
     g_unlocks[4][6] = b_soup;
