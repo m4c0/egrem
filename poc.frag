@@ -290,8 +290,10 @@ float brick_sdf(vec3 p) {
 vec3 brick(vec2 p, vec3 c) {
   // raymarch
   float t = -1.0;
+  float d = 10.0;
   for (int i = 0; i < 256; i++) {
     float h = brick_sdf(vec3(p, t));
+    d = min(d, h);
     if (h < 0.001 || t > 1) break;
     t += h;
   }
@@ -309,6 +311,7 @@ vec3 brick(vec2 p, vec3 c) {
   float amb = 0.5 + 0.5 * dot(nor, vec3(0.0, 1.0, 0.0));
   vec3 cc = vec3(0.3, 0.03, 0.02) * amb + vec3(0.8, 0.1, 0.07) * dif;
 
+  c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
   c = mix(cc, c, step(1, t));
   return c;
 }
