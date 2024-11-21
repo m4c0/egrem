@@ -277,8 +277,6 @@ struct init {
         g_map[y][x] = b_empty;
 
     g_map[4][4] = b_sheep;
-    g_map[5][3] = b_brick;
-    g_map[5][4] = b_wall;
     g_map[5][5] = b_music;
 
     g_unlocks[3][6] = b_hat;

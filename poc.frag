@@ -447,11 +447,11 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 12) return egg(p, c);
   else if (spr == 13) return straw(p, c);
   else if (spr == 14) return stick(p, c);
+  else if (spr == 15) return brick(p, c);
   else if (spr == 16) return fan(p, c);
   else if (spr == 17) return trash(p, c);
   else if (spr == 18) return fire(p, c);
-  else if (spr == 19) return brick(p, c);
-  else if (spr == 20) return wall(p, c);
+  else if (spr == 19) return wall(p, c);
   else return vec3(1, 0, 1); // Should not happen
 }
 
