@@ -31,6 +31,26 @@ vec3 c_border(vec2 p, vec3 c, float d) {
   return mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
 }
 
+float hash(vec2 p) {
+  return fract(cos(dot(p, vec2(91.52, -74.27))) * 939.24);
+}
+float noise_plane(vec2 p) {
+  vec2 f = floor(p);
+  vec2 s = p - f;
+  vec4 m = (s * s * (3.0 - s - s)).xyxy;
+  m = m * vec4(-1, -1, 1, 1) + vec4(1, 1, 0, 0);
+  return 
+    (hash(f + vec2(0, 0)) * m.x + hash(f + vec2(1, 0)) * m.z) * m.y +
+    (hash(f + vec2(0, 1)) * m.x + hash(f + vec2(1, 1)) * m.z) * m.w;
+}
+float noise(vec2 p) {
+  return
+    0.6 * noise_plane(p *  8.0) +
+    0.4 * noise_plane(p * 16.0) +
+    0.3 * noise_plane(p * 32.0) +
+    0.2 * noise_plane(p * 64.0);
+}
+
 vec3 sheep_body(vec2 p, vec3 c) {
   p.y *= -1;
   p.y += 0.05;
@@ -291,7 +311,7 @@ vec3 brick(vec2 p, vec3 c) {
   // raymarch
   float t = -1.0;
   float d = 10.0;
-  for (int i = 0; i < 256; i++) {
+  for (int i = 0; i < 16; i++) {
     float h = brick_sdf(vec3(p, t));
     d = min(d, h);
     if (h < 0.001 || t > 1) break;
@@ -310,6 +330,8 @@ vec3 brick(vec2 p, vec3 c) {
   float dif = clamp(dot(-nor, vec3(0.5773)), 0.0, 1.0);
   float amb = 0.5 + 0.5 * dot(nor, vec3(0.0, 1.0, 0.0));
   vec3 cc = vec3(0.3, 0.03, 0.02) * amb + vec3(0.8, 0.1, 0.07) * dif;
+
+  cc *= noise(p) * 0.3 + 0.7;
 
   c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
   c = mix(cc, c, step(1, t));
