@@ -265,34 +265,47 @@ vec3 egg(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 brick(vec2 p, vec3 c) {
-  float tx = 1;
-  mat3 rx = mat3(
+float brick_sdf(vec3 p) {
+  const float tx = 1;
+  const mat3 rx = mat3(
     cos(tx),  0, -sin(tx),
     0,        1, 0,
     sin(tx),  0, cos(tx)
   );
-  float ty = 0.5;
-  mat3 ry = mat3(
+  const float ty = 0.5;
+  const mat3 ry = mat3(
     1, 0,       0,
     0, cos(ty), -sin(ty),
     0, sin(ty), cos(ty)
   );
-  float tz = 1;
-  mat3 rz = mat3(
+  const float tz = 1;
+  const mat3 rz = mat3(
     cos(tz), -sin(tz), 0, 
     sin(tz), cos(tz),  0, 
     0,       0,        1
   );
-  mat3 rot = rz * ry * rx;
+  const mat3 rot = rz * ry * rx;
+  return sd_box_3d(rot * p, vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
+}
+vec3 brick(vec2 p, vec3 c) {
+  // raymarch
   float t = -1.0;
   for (int i = 0; i < 256; i++) {
-    vec3 p3 = rot * vec3(p, t);
-    float h = sd_box_3d(p3, vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
+    float h = brick_sdf(vec3(p, t));
     if (h < 0.001 || t > 1) break;
     t += h;
   }
-  c = mix(vec3(0), c, step(1, t));
+  // normals - https://iquilezles.org/articles/normalsSDF
+  const vec2 e = vec2(1.0, -1.0) * 0.5773;
+  const float eps = 0.0005;
+  vec3 pos = vec3(p, t);
+  vec3 n = normalize(
+    e.xyy * brick_sdf(pos + e.xyy * eps) + 
+    e.yyx * brick_sdf(pos + e.yyx * eps) + 
+    e.yxy * brick_sdf(pos + e.yxy * eps) + 
+    e.xxx * brick_sdf(pos + e.xxx * eps));
+
+  c = mix(n * 0.5 + 0.5, c, step(1, t));
   return c;
 }
 
