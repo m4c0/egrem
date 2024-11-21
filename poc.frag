@@ -296,16 +296,20 @@ vec3 brick(vec2 p, vec3 c) {
     t += h;
   }
   // normals - https://iquilezles.org/articles/normalsSDF
-  const vec2 e = vec2(1.0, -1.0) * 0.5773;
+  const vec2 e = vec2(1.0, -1.0) * 0.5773; // 0.5773 ~= sqrt(3)/3
   const float eps = 0.0005;
   vec3 pos = vec3(p, t);
-  vec3 n = normalize(
+  vec3 nor = normalize(
     e.xyy * brick_sdf(pos + e.xyy * eps) + 
     e.yyx * brick_sdf(pos + e.yyx * eps) + 
     e.yxy * brick_sdf(pos + e.yxy * eps) + 
     e.xxx * brick_sdf(pos + e.xxx * eps));
 
-  c = mix(n * 0.5 + 0.5, c, step(1, t));
+  float dif = clamp(dot(-nor, vec3(0.5773)), 0.0, 1.0);
+  float amb = 0.5 + 0.5 * dot(nor, vec3(0.0, 1.0, 0.0));
+  vec3 cc = vec3(0.3, 0.03, 0.02) * amb + vec3(0.8, 0.1, 0.07) * dif;
+
+  c = mix(cc, c, step(1, t));
   return c;
 }
 
