@@ -278,6 +278,10 @@ struct init {
 
     g_map[4][4] = b_sheep;
 
+    g_unlocks[3][2] = b_straw;
+    g_unlocks[4][2] = b_stick;
+    g_unlocks[5][2] = b_brick;
+    g_unlocks[6][2] = b_music;
     g_unlocks[3][6] = b_hat;
     g_unlocks[4][6] = b_soup;
     g_unlocks[5][6] = b_egg;
