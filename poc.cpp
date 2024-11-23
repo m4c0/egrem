@@ -110,6 +110,28 @@ static constexpr auto g_movers = [] {
   return res;
 }();
 
+static void init_meta() {
+  for (auto y = 3; y < 6; y++)
+    for (auto x = 3; x < 6; x++)
+      g_map[y][x] = b_empty;
+
+  g_map[4][4] = b_sheep;
+
+  g_unlocks[3][2] = b_straw;
+  g_unlocks[4][2] = b_stick;
+  g_unlocks[5][2] = b_brick;
+  g_unlocks[6][2] = b_music;
+  g_unlocks[3][6] = b_hat;
+  g_unlocks[4][6] = b_soup;
+  g_unlocks[5][6] = b_egg;
+  g_unlocks[6][3] = b_thread;
+  g_unlocks[6][4] = b_wool;
+  g_unlocks[6][5] = b_store;
+
+  g_prizes[b_store] = b_pig;
+  g_prizes[b_egg] = b_trash;
+}
+
 static auto map(dotz::ivec2 p) { 
   if (p.x < 0 || p.y < 0 || p.x > 15 || p.y > 15) return b_locked;
   return g_map[p.y][p.x];
@@ -272,25 +294,7 @@ struct init {
       for (auto & col : row)
         col = b_locked;
 
-    for (auto y = 3; y < 6; y++)
-      for (auto x = 3; x < 6; x++)
-        g_map[y][x] = b_empty;
-
-    g_map[4][4] = b_sheep;
-
-    g_unlocks[3][2] = b_straw;
-    g_unlocks[4][2] = b_stick;
-    g_unlocks[5][2] = b_brick;
-    g_unlocks[6][2] = b_music;
-    g_unlocks[3][6] = b_hat;
-    g_unlocks[4][6] = b_soup;
-    g_unlocks[5][6] = b_egg;
-    g_unlocks[6][3] = b_thread;
-    g_unlocks[6][4] = b_wool;
-    g_unlocks[6][5] = b_store;
-
-    g_prizes[b_store] = b_pig;
-    g_prizes[b_egg] = b_trash;
+    init_meta();
 
 #ifndef LECO_TARGET_IOS
     handle(MOUSE_DOWN, [] {
