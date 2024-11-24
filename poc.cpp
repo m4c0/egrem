@@ -125,6 +125,10 @@ static constexpr auto g_domain = [] {
 }();
 
 static void init_meta() {
+  for (auto & row : g_map)
+    for (auto & col : row)
+      col = b_locked;
+
   for (auto y = 3; y < 6; y++)
     for (auto x = 3; x < 6; x++)
       g_map[y][x] = b_empty;
@@ -302,10 +306,6 @@ static void drag_end() {
 struct init {
   init() {
     using namespace casein;
-
-    for (auto & row : g_map)
-      for (auto & col : row)
-        col = b_locked;
 
     init_meta();
 
