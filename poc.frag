@@ -445,6 +445,9 @@ vec3 locked(vec2 p, vec3 c) {
   c = mix(xc, c, step(0, d) * 0.3 + 0.7);
   return c;
 }
+vec3 tbd(vec2 p, vec3 c) {
+  return mix(vec3(1, 0, 1), c, step(0, sd_circle(p, 0.5)));
+}
 
 vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   if (spr == 0) return c; // b_empty
@@ -468,7 +471,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 18) return fire(p, c);
   else if (spr == 19) return wall(p, c);
   else if (spr == 20) return music(p, c);
-  else return vec3(1, 0, 1); // Should not happen
+  else return tbd(p, c); // Should not happen
 }
 
 vec3 cell_sprite(vec2 p, vec3 c, uvec4 map) {
