@@ -39,6 +39,9 @@ enum block : uint8_t {
   b_fire      = 18,
   b_wall      = 19,
   b_music     = 20,
+  b_garbage   = 21,
+  b_compost   = 22,
+  b_wheat     = 23,
 };
 
 struct upc {
@@ -85,28 +88,39 @@ static constexpr auto g_movers = [] {
     res.data[i][b_trash] = trash;
   }
 
+  // TODO/Thoughts:
+  // - maybe: outfit + hat (or fan) = store?
+  // - maybe: outfit + hat = scarecrow or one-piece ref?
+
   res.data[b_sheep][b_empty] = spawn<b_wool>;
   res.data[b_wool][b_wool] = merge<b_thread>;
   res.data[b_thread][b_thread] = merge<b_shorts>;
   res.data[b_shorts][b_shorts] = merge<b_outfit>;
   res.data[b_outfit][b_outfit] = merge<b_store>;
 
+  res.data[b_trash  ][b_empty  ] = spawn<b_garbage>;
+  res.data[b_garbage][b_garbage] = merge<b_compost>;
+  res.data[b_compost][b_compost] = merge<b_wheat>;
+  res.data[b_wheat  ][b_wheat  ] = merge<b_straw>;
+  res.data[b_straw  ][b_straw  ] = merge<b_hat>;
+  res.data[b_hat    ][b_hat    ] = merge<b_fan>;
+
   res.data[b_pig][b_empty] = spawn<b_shroom>;
   res.data[b_shroom][b_shroom] = merge<b_soup>;
 
-  res.data[b_shorts][b_soup] = merge<b_egg>;
-
-  res.data[b_pig][b_store] = spawn<b_straw>;
-  res.data[b_straw][b_straw] = merge<b_hat>;
-  res.data[b_hat][b_hat] = merge<b_fan>;
-
-  res.data[b_pig][b_fan] = spawn<b_stick>;
+  res.data[b_pig][b_hat] = spawn<b_stick>;
   res.data[b_stick][b_stick] = merge<b_fire>;
 
-  res.data[b_pig][b_fire] = spawn<b_brick>;
+  //res.data[b_pig][b_fire] = spawn<b_brick>;
   res.data[b_brick][b_brick] = spawn<b_wall>;
-  res.data[b_brick][b_wall] = spawn<b_music>;
 
+  // Easter Eggs
+  res.data[b_shorts][b_soup] = merge<b_egg>;
+  res.data[b_brick ][b_wall] = merge<b_music>;
+
+  // TODO: static assertions
+  // - exactly one rule resulting in a object
+  // - never consume animals
   return res;
 }();
 
@@ -128,8 +142,8 @@ static void init_meta() {
   g_unlocks[6][4] = b_wool;
   g_unlocks[6][5] = b_store;
 
-  g_prizes[b_store] = b_pig;
-  g_prizes[b_egg] = b_trash;
+  g_prizes[b_store] = b_trash;
+  g_prizes[b_hat  ] = b_pig;
 }
 
 static auto map(dotz::ivec2 p) { 
