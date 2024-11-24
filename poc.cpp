@@ -71,11 +71,11 @@ static constexpr auto move = [](auto & f, auto & t) { t = f; f = b_empty; };
 static constexpr auto unlock = [](auto & f, auto & t) { t = g_prizes[f]; f = b_empty; };
 static constexpr auto trash = [](auto & f, auto & t) { f = b_empty; };
 
-static constexpr auto g_movers = [] {
+static constexpr auto g_domain = [] {
   struct {
-    mover_t data[256][256];
+    mover_t movers[256][256];
   } res;
-  for (auto & row : res.data) {
+  for (auto & row : res.movers) {
     for (auto & m : row) m = ignore;
 
     row[b_empty] = move;
@@ -85,38 +85,38 @@ static constexpr auto g_movers = [] {
     if (i == b_pig) continue;
     if (i == b_sheep) continue;
     if (i == b_trash) continue;
-    res.data[i][b_trash] = trash;
+    res.movers[i][b_trash] = trash;
   }
 
   // TODO/Thoughts:
   // - maybe: outfit + hat (or fan) = store?
   // - maybe: outfit + hat = scarecrow or one-piece ref?
 
-  res.data[b_sheep][b_empty] = spawn<b_wool>;
-  res.data[b_wool][b_wool] = merge<b_thread>;
-  res.data[b_thread][b_thread] = merge<b_shorts>;
-  res.data[b_shorts][b_shorts] = merge<b_outfit>;
-  res.data[b_outfit][b_outfit] = merge<b_store>;
+  res.movers[b_sheep][b_empty] = spawn<b_wool>;
+  res.movers[b_wool][b_wool] = merge<b_thread>;
+  res.movers[b_thread][b_thread] = merge<b_shorts>;
+  res.movers[b_shorts][b_shorts] = merge<b_outfit>;
+  res.movers[b_outfit][b_outfit] = merge<b_store>;
 
-  res.data[b_trash  ][b_empty  ] = spawn<b_garbage>;
-  res.data[b_garbage][b_garbage] = merge<b_compost>;
-  res.data[b_compost][b_compost] = merge<b_wheat>;
-  res.data[b_wheat  ][b_wheat  ] = merge<b_straw>;
-  res.data[b_straw  ][b_straw  ] = merge<b_hat>;
-  res.data[b_hat    ][b_hat    ] = merge<b_fan>;
+  res.movers[b_trash  ][b_empty  ] = spawn<b_garbage>;
+  res.movers[b_garbage][b_garbage] = merge<b_compost>;
+  res.movers[b_compost][b_compost] = merge<b_wheat>;
+  res.movers[b_wheat  ][b_wheat  ] = merge<b_straw>;
+  res.movers[b_straw  ][b_straw  ] = merge<b_hat>;
+  res.movers[b_hat    ][b_hat    ] = merge<b_fan>;
 
-  res.data[b_pig][b_empty] = spawn<b_shroom>;
-  res.data[b_shroom][b_shroom] = merge<b_soup>;
+  res.movers[b_pig][b_empty] = spawn<b_shroom>;
+  res.movers[b_shroom][b_shroom] = merge<b_soup>;
 
-  res.data[b_pig][b_hat] = spawn<b_stick>;
-  res.data[b_stick][b_stick] = merge<b_fire>;
+  res.movers[b_pig][b_hat] = spawn<b_stick>;
+  res.movers[b_stick][b_stick] = merge<b_fire>;
 
-  //res.data[b_pig][b_fire] = spawn<b_brick>;
-  res.data[b_brick][b_brick] = spawn<b_wall>;
+  //res.movers[b_pig][b_fire] = spawn<b_brick>;
+  res.movers[b_brick][b_brick] = spawn<b_wall>;
 
   // Easter Eggs
-  res.data[b_shorts][b_soup] = merge<b_egg>;
-  res.data[b_brick ][b_wall] = merge<b_music>;
+  res.movers[b_shorts][b_soup] = merge<b_egg>;
+  res.movers[b_brick ][b_wall] = merge<b_music>;
 
   // TODO: static assertions
   // - exactly one rule resulting in a object
@@ -151,7 +151,7 @@ static auto map(dotz::ivec2 p) {
 }
 
 static void drop(block & from, block & to) {
-  g_movers.data[from][to](from, to);
+  g_domain.movers[from][to](from, to);
 }
 static bool can_drag(block b) {
   switch (b) {
@@ -166,7 +166,7 @@ static bool can_drop(dotz::ivec2 p) {
   switch (to) {
     case b_locked: return g_unlocks[p.y][p.x] == from;
     case b_empty:  return true;
-    default:       return g_movers.data[from][to] != ignore;
+    default:       return g_domain.movers[from][to] != ignore;
   }
 }
 
