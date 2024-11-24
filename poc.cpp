@@ -136,7 +136,6 @@ static void init_meta() {
   g_unlocks[5][2] = b_brick;
   g_unlocks[6][2] = b_music;
   g_unlocks[3][6] = b_hat;
-  g_unlocks[4][6] = b_soup;
   g_unlocks[5][6] = b_egg;
   g_unlocks[6][3] = b_thread;
   g_unlocks[6][4] = b_wool;
