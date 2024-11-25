@@ -439,6 +439,22 @@ vec3 music(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 garbage(vec2 p, vec3 c) {
+  float rd = sd_box(p + vec2(0, 0.10), vec2(0.07, 0.03));
+
+  float d;
+  d = sd_rhombus(p + vec2(0, 0.2), vec2(0.2, 0.1));
+  p.y *= -1.6;
+  p.y += 0.15;
+  p.x *= 1.8;
+  d = min(d, sd_cut_disk(p, 0.25, -0.15) - 0.1);
+  c = mix(vec3(0), c, step(0, d));
+
+  c = mix(vec3(0.7, 0.05, 0.0), c, step(0, rd));
+  c = c_border(p, c, rd);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -471,6 +487,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 18) return fire(p, c);
   else if (spr == 19) return wall(p, c);
   else if (spr == 20) return music(p, c);
+  else if (spr == 21) return garbage(p, c);
   else return tbd(p, c); // Should not happen
 }
 
