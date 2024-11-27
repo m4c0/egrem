@@ -465,6 +465,24 @@ vec3 compost(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 wheat(vec2 p, vec3 c) {
+  float d, ad;
+
+  ad = d = sd_box(p, vec2(0.02, 0.3));
+  c = mix(vec3(0, 0.3, 0.05), c, step(0, d));
+
+  p.x = abs(p.x);
+  p.x -= 0.1;
+  float id = clamp(p.y / 0.15, -1, 1);
+  p.y -= 0.15 * round(id);
+  d = sd_rnd_box(p, vec2(0.1, 0.05), vec4(0.05, 0, 0, 0.05));
+  ad = min(d, ad);
+  c = mix(vec3(0, 0.3, 0.05), c, step(0, d));
+
+  c = c_border(p, c, ad);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -499,6 +517,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 20) return music(p, c);
   else if (spr == 21) return garbage(p, c);
   else if (spr == 22) return compost(p, c);
+  else if (spr == 23) return wheat(p, c);
   else return tbd(p, c); // Should not happen
 }
 
