@@ -92,8 +92,8 @@ static constexpr auto g_domain = [] {
   // - maybe: outfit + hat (or fan) = store?
   // - maybe: outfit + hat = scarecrow or one-piece ref?
 
-  res.movers[b_sheep][b_empty] = spawn<b_wool>;
-  res.movers[b_wool][b_wool] = merge<b_thread>;
+  res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
+  res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
   res.movers[b_thread][b_thread] = merge<b_shorts>;
   res.movers[b_shorts][b_shorts] = merge<b_outfit>;
   res.movers[b_outfit][b_outfit] = merge<b_store>;
@@ -105,10 +105,10 @@ static constexpr auto g_domain = [] {
   res.movers[b_straw  ][b_straw  ] = merge<b_hat>;
   res.movers[b_hat    ][b_hat    ] = merge<b_fan>;
 
-  res.movers[b_pig][b_empty] = spawn<b_shroom>;
+  res.movers[b_pig   ][b_empty ] = spawn<b_shroom>;
   res.movers[b_shroom][b_shroom] = merge<b_soup>;
 
-  res.movers[b_pig][b_hat] = spawn<b_stick>;
+  res.movers[b_pig  ][b_straw] = spawn<b_stick>;
   res.movers[b_stick][b_stick] = merge<b_fire>;
 
   //res.movers[b_pig][b_fire] = spawn<b_brick>;
