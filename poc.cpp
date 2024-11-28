@@ -111,7 +111,7 @@ static constexpr auto g_domain = [] {
   res.movers[b_pig  ][b_straw] = spawn<b_stick>;
   res.movers[b_stick][b_stick] = merge<b_fire>;
 
-  //res.movers[b_pig][b_fire] = spawn<b_brick>;
+  res.movers[b_pig  ][b_fire ] = spawn<b_brick>;
   res.movers[b_brick][b_brick] = merge<b_wall>;
 
   // Easter Eggs
