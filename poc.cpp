@@ -42,6 +42,9 @@ enum block : uint8_t {
   b_garbage   = 21,
   b_compost   = 22,
   b_wheat     = 23,
+  b_can       = 24,
+  b_metal     = 25,
+  b_tool      = 26,
 };
 
 struct upc {
@@ -91,6 +94,7 @@ static constexpr auto g_domain = [] {
   // TODO/Thoughts:
   // - maybe: outfit + hat (or fan) = store?
   // - maybe: outfit + hat = scarecrow or one-piece ref?
+  // - maybe: outfit + egg = some minecraft ref?
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
@@ -114,9 +118,9 @@ static constexpr auto g_domain = [] {
   res.movers[b_pig   ][b_empty ] = spawn<b_shroom>;
   res.movers[b_shroom][b_shroom] = merge<b_soup>;
 
-  // res.movers[b_soup  ][b_soup  ] = merge<b_can>;
-  // res.movers[b_trash ][b_can   ] = spawn<b_metal>;
-  // res.movers[b_metal ][b_stick ] = merge<b_tool>;
+  res.movers[b_soup  ][b_soup  ] = merge<b_can>;
+  res.movers[b_trash ][b_can   ] = spawn<b_metal>;
+  res.movers[b_metal ][b_stick ] = merge<b_tool>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_egg>;   // Stardew Valley
