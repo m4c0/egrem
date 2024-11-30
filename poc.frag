@@ -483,6 +483,33 @@ vec3 wheat(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 can(vec2 p, vec3 c) {
+  p.x *= 0.5;
+
+  float d;
+  float dd = 10;
+
+  d = sd_circle(p - vec2(0, 0.15), 0.1);
+  d = min(d, sd_box(p - vec2(0, 0.05), vec2(0.1)));
+  c = mix(vec3(0.8), c, step(0, d));
+  dd = min(d, dd);
+
+  d = sd_circle(p, 0.1);
+  d = min(d, sd_box(p + vec2(0, 0.07), vec2(0.1, 0.08)));
+  c = mix(vec3(0.7, 0.05, 0.05), c, smoothstep(-0.001, 0.001, d));
+  dd = min(d, dd);
+  c = c_border(p, c, dd * 2);
+
+  d = sd_circle(p + vec2(0, 0.15), 0.1);
+  c = mix(vec3(0.4), c, step(0, d));
+  c = c_border(p, c, d * 2);
+
+  p.x /= 0.5;
+  d = sd_circle(p - vec2(0, 0.1), 0.04);
+  c = mix(vec3(0.4, 0.4, 0.1), c, smoothstep(-0.001, 0.001, d));
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -518,6 +545,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 21) return garbage(p, c);
   else if (spr == 22) return compost(p, c);
   else if (spr == 23) return wheat(p, c);
+  else if (spr == 24) return can(p, c);
   else return tbd(p, c); // Should not happen
 }
 
