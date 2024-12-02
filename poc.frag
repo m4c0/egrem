@@ -517,6 +517,19 @@ vec3 can(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 tool(vec2 p, vec3 c) {
+  float sd = sd_segment(p, vec2(0.1, -0.1), vec2(-0.2, 0.2)) - 0.02;
+  c = mix(vec3(0.5, 0.15, 0.0), c, step(0, sd));
+
+  float hd = sd_oriented_box(p - vec2(0.1, -0.1), vec2(0.1), vec2(-0.1), 0.15);
+  c = mix(vec3(0.3, 0.3, 0.3), c, step(0, hd));
+
+  float d = min(hd, sd);
+
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -554,6 +567,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 23) return wheat(p, c);
   else if (spr == 24) return can(p, c);
   else if (spr == 25) return metal_bar(p, c);
+  else if (spr == 26) return tool(p, c);
   else return tbd(p, c); // Should not happen
 }
 
