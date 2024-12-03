@@ -45,6 +45,7 @@ enum block : uint8_t {
   b_can       = 24,
   b_metal     = 25,
   b_tool      = 26,
+  b_berlin    = 27,
 };
 
 struct upc {
@@ -123,8 +124,9 @@ static constexpr auto g_domain = [] {
   res.movers[b_metal ][b_stick ] = merge<b_tool>;
 
   // Easter Eggs
-  res.movers[b_shorts][b_soup] = merge<b_egg>;   // Stardew Valley
-  res.movers[b_brick ][b_wall] = merge<b_music>; // Pink Floyd
+  res.movers[b_shorts][b_soup] = merge<b_egg>;    // Stardew Valley
+  res.movers[b_brick ][b_wall] = merge<b_music>;  // Pink Floyd
+  res.movers[b_tool  ][b_wall] = merge<b_berlin>; // Fall of Berlin Wall
 
   // TODO: static assertions
   // - exactly one rule resulting in a object
