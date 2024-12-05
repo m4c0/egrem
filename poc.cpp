@@ -47,6 +47,8 @@ enum block : uint8_t {
   b_tool      = 26,
   b_berlin    = 27, // TODO
   b_computer  = 28, // TODO
+  b_phone     = 29, // TODO
+  b_iphone    = 30, // TODO
 };
 
 struct upc {
@@ -125,6 +127,12 @@ static constexpr auto g_domain = [] {
   res.movers[b_soup  ][b_soup  ] = merge<b_can>;
   res.movers[b_trash ][b_can   ] = spawn<b_metal>;
   res.movers[b_metal ][b_stick ] = merge<b_tool>;
+
+  res.movers[b_thread][b_can] = merge<b_phone>;
+  res.movers[b_can][b_thread] = merge<b_phone>;
+
+  res.movers[b_phone][b_computer] = merge<b_iphone>;
+  res.movers[b_computer][b_phone] = merge<b_iphone>;
 
   res.movers[b_fire][b_wall] = merge<b_computer>;
 
