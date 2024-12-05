@@ -94,10 +94,11 @@ static constexpr auto g_domain = [] {
   }
 
   // TODO/Thoughts:
-  // - maybe: outfit + hat (or fan) = store?
-  // - maybe: outfit + hat = scarecrow or one-piece ref?
-  // - maybe: outfit + egg = some minecraft ref?
-  // - maybe: foo + fan = fan of foo?
+  // - outfit + hat (or fan) = store?
+  // - outfit + hat = scarecrow or one-piece ref?
+  // - outfit + tool? = some minecraft ref? tnt?
+  // - foo + fan = fan of foo?
+  // - add ref to Ayrton Senna
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
@@ -148,6 +149,7 @@ static void init_meta() {
       g_map[y][x] = b_empty;
 
   g_map[4][4] = b_sheep;
+  g_map[3][4] = b_berlin;
 
   g_unlocks[3][2] = b_straw;
   g_unlocks[4][2] = b_stick;
