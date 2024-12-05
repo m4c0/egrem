@@ -128,13 +128,10 @@ static constexpr auto g_domain = [] {
   res.movers[b_trash ][b_can   ] = spawn<b_metal>;
   res.movers[b_metal ][b_stick ] = merge<b_tool>;
 
-  res.movers[b_thread][b_can] = merge<b_phone>;
-  res.movers[b_can][b_thread] = merge<b_phone>;
-
-  res.movers[b_phone][b_computer] = merge<b_iphone>;
+  res.movers[b_fire    ][b_wall ] = merge<b_computer>;
+  res.movers[b_thread  ][b_can  ] = merge<b_phone>;
   res.movers[b_computer][b_phone] = merge<b_iphone>;
 
-  res.movers[b_fire][b_wall] = merge<b_computer>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_egg>;    // Stardew Valley
@@ -157,6 +154,7 @@ static void init_meta() {
       g_map[y][x] = b_empty;
 
   g_map[4][4] = b_sheep;
+  g_map[3][4] = b_berlin;
   g_map[3][4] = b_berlin;
 
   g_unlocks[3][2] = b_straw;
