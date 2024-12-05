@@ -154,8 +154,6 @@ static void init_meta() {
       g_map[y][x] = b_empty;
 
   g_map[4][4] = b_sheep;
-  g_map[3][4] = b_berlin;
-  g_map[3][4] = b_berlin;
 
   g_unlocks[3][2] = b_straw;
   g_unlocks[4][2] = b_stick;
