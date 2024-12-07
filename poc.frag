@@ -533,17 +533,16 @@ vec3 tool(vec2 p, vec3 c) {
 vec3 iphone(vec2 p, vec3 c) {
   float d = sd_box(p, vec2(0.15, 0.3)) - 0.03;
 
-  vec3 cc;
-
   vec2 id = round(p / 0.1);
   id = clamp(id, -1, 1);
   vec2 pp = p - 0.1 * id;
-  float dd = sd_box(pp, vec2(0.03));
-  cc = mix(vec3(0.4), vec3(0), step(0, dd));
+  float dd = sd_box(pp, vec2(0.02)) - 0.01;
+  float rid = noise(id + 1) + noise(p) * 0.3;
+  vec3 cc = hsv2rgb(vec3(rid, 1.0, 0.4));
+  cc = mix(cc, vec3(0), step(0, dd));
 
   cc = mix(cc, vec3(0.05), step(0.2, p.y));
   cc = mix(vec3(0.05), cc, step(-0.2, p.y));
-
 
   c = mix(cc, c, step(0, d));
 
