@@ -550,6 +550,24 @@ vec3 iphone(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 computer(vec2 p, vec3 c) {
+  p.y += 0.07;
+
+  vec3 cc;
+
+  // TODO: add something to the display
+  float d0 = sd_box(p, vec2(0.2, 0.13)) - 0.02;
+  cc = mix(vec3(0), vec3(0.4), step(-0.03, d0));
+
+  float d1 = sd_trapezoid(p - vec2(0, 0.25), 0.15, 0.2, 0.05) - 0.02;
+  cc = mix(vec3(0.1), cc, step(-0.03, d1));
+
+  float d = min(d0, d1);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -588,6 +606,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 24) return can(p, c);
   else if (spr == 25) return metal_bar(p, c);
   else if (spr == 26) return tool(p, c);
+  else if (spr == 28) return computer(p, c);
   else if (spr == 30) return iphone(p, c);
   else return tbd(p, c); // Should not happen
 }
