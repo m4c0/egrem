@@ -550,6 +550,28 @@ vec3 iphone(vec2 p, vec3 c) {
   return c;
 }
 
+float phone_ear(vec2 p) {
+  p.x = abs(p.x);
+  p -= vec2(0.15, -0.10);
+  return sd_box(p, vec2(0.04, 0.03)) - 0.02;
+}
+float phone_base(vec2 p) {
+  p.y -= 0.08;
+  return sd_trapezoid(p, 0.1, 0.2, 0.1) - 0.03;
+}
+vec3 phone(vec2 p, vec3 c) {
+  float d = sd_arc(p * -1, 0.9, 0.2) - 0.05;
+  d = min(d, phone_ear(p));
+
+  float d0 = max(-(d - 0.05), phone_base(p));
+  d = min(d, d0);
+
+  vec3 cc = vec3(0.2, 0.4, 0.1);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 computer(vec2 p, vec3 c) {
   p.y += 0.07;
 
@@ -607,6 +629,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 25) return metal_bar(p, c);
   else if (spr == 26) return tool(p, c);
   else if (spr == 28) return computer(p, c);
+  else if (spr == 29) return phone(p, c);
   else if (spr == 30) return iphone(p, c);
   else return tbd(p, c); // Should not happen
 }
