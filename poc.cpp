@@ -47,8 +47,9 @@ enum block : uint8_t {
   b_tool      = 26,
   b_berlin    = 27, // TODO
   b_computer  = 28,
-  b_phone     = 29, // TODO
+  b_phone     = 29,
   b_iphone    = 30,
+  b_world     = 31, // TODO
 };
 
 struct upc {
@@ -131,6 +132,8 @@ static constexpr auto g_domain = [] {
   res.movers[b_fire    ][b_wall ] = merge<b_computer>;
   res.movers[b_thread  ][b_can  ] = merge<b_phone>;
   res.movers[b_computer][b_phone] = merge<b_iphone>;
+
+  res.movers[b_computer][b_computer] = merge<b_world>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_egg>;    // Stardew Valley
