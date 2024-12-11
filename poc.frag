@@ -590,6 +590,30 @@ vec3 computer(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 world(vec2 p, vec3 c) {
+  float de = sd_circle(p, 0.25);
+
+  float d = de;
+  d = max(d, -sd_segment(p, vec2(-1, 0), vec2(1, 0)));
+  d = max(d, -sd_segment(p, vec2(0, -1), vec2(0, 1)));
+
+  float dc = sd_circle(abs(p) + vec2(0, -0.35), 0.25);
+  dc = abs(dc);
+  d = max(d, -dc);
+
+  dc = sd_circle(abs(p) + vec2(0.275, 0), 0.4);
+  dc = abs(dc);
+  d = max(d, -dc);
+
+  vec3 co = vec3(0.02, 0.07, 0.3);
+  vec3 cl = vec3(0.02, 0.3, 0.07);
+  float np = smoothstep(0.3, 0.6, noise(p * 0.2));
+  vec3 cc = mix(co, cl, np);
+  c = mix(cc, c, step(0, de));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   float d = sd_rnd_x(p, 1.0, 0.05);
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
@@ -631,6 +655,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 28) return computer(p, c);
   else if (spr == 29) return phone(p, c);
   else if (spr == 30) return iphone(p, c);
+  else if (spr == 31) return world(p, c);
   else return tbd(p, c); // Should not happen
 }
 
