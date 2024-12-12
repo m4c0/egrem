@@ -615,7 +615,8 @@ vec3 world(vec2 p, vec3 c) {
 }
 
 vec3 locked(vec2 p, vec3 c) {
-  float d = sd_rnd_x(p, 1.0, 0.05);
+  p.x = p.x - 0.15 * round(p.x / 0.15);
+  float d = sd_segment(p, vec2(0, -1), vec2(0, 1)) - 0.03;
   vec3 xc = vec3(1, 0, 0) * smoothstep(0, 0.03, abs(d));
   c = mix(xc, c, step(0, d) * 0.3 + 0.7);
   return c;
