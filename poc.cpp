@@ -121,7 +121,7 @@ static constexpr auto g_domain = [] {
   // Three little pigs
   res.movers[b_fan  ][b_straw] = spawn<b_stick>;
   res.movers[b_stick][b_stick] = merge<b_fire>;
-  res.movers[b_stick][b_fire ] = spawn<b_brick>;
+  res.movers[b_fire ][b_stick] = spawn<b_brick>;
   res.movers[b_brick][b_brick] = merge<b_wall>;
 
   res.movers[b_pig   ][b_empty ] = spawn<b_shroom>;
@@ -163,9 +163,9 @@ static void init_meta() {
   g_unlocks[4][2] = b_stick;
   g_unlocks[5][2] = b_brick;
 
-  g_unlocks[3][6] = b_garbage;
+  g_unlocks[3][6] = b_fan; // Aligned with "straw" as a "hint"
   g_unlocks[4][6] = b_wheat;
-  g_unlocks[5][6] = b_fan;
+  g_unlocks[5][6] = b_garbage;
 
   g_unlocks[6][3] = b_thread;
   g_unlocks[6][4] = b_wool;
