@@ -49,7 +49,8 @@ enum block : uint8_t {
   b_computer  = 28,
   b_phone     = 29,
   b_iphone    = 30,
-  b_world     = 31, // TODO
+  b_world     = 31,
+  b_chicken   = 32,
 };
 
 struct upc {
@@ -92,6 +93,7 @@ static constexpr auto g_domain = [] {
   for (auto i = 0; i < 256; i++) {
     if (i == b_pig) continue;
     if (i == b_sheep) continue;
+    if (i == b_chicken) continue;
     if (i == b_trash) continue;
     res.movers[i][b_trash] = trash;
   }
@@ -176,7 +178,7 @@ static void init_meta() {
 
   g_prizes[b_store] = b_trash;
   g_prizes[b_brick] = b_pig;
-  // g_prizes[b_egg] = b_chicken;
+  g_prizes[b_egg] = b_chicken;
 }
 
 static auto map(dotz::ivec2 p) { 
