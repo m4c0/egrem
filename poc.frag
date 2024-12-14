@@ -590,6 +590,25 @@ vec3 computer(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 chicken(vec2 p, vec3 c) {
+  float dbd = sd_ellipse(p + vec2(0, -0.05), vec2(0.25, 0.18));
+  float dhd = sd_circle(p + vec2(0.08, 0.1), 0.13);
+  
+  float d = min(dbd, dhd);
+  c = mix(vec3(0.8, 0.6, 0.3), c, step(0, d));
+  c = c_border(p, c, d);
+
+  float dpk = sd_ellipse(p + vec2(0.08, 0.1), vec2(0.05, 0.02));
+  c = mix(vec3(0.4, 0.3, 0.03), c, step(0, dpk));
+  c = c_border(p, c, dpk);
+
+  float dcb = sd_circle(p + vec2(0.08, 0.23), 0.05);
+  c = mix(vec3(0.4, 0.05, 0.03), c, step(0, dcb));
+  c = c_border(p, c, dcb);
+
+  return c;
+}
+
 vec3 world(vec2 p, vec3 c) {
   float de = sd_circle(p, 0.25);
 
@@ -657,6 +676,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 29) return phone(p, c);
   else if (spr == 30) return iphone(p, c);
   else if (spr == 31) return world(p, c);
+  else if (spr == 32) return chicken(p, c);
   else return tbd(p, c); // Should not happen
 }
 
