@@ -594,7 +594,8 @@ vec3 chicken(vec2 p, vec3 c) {
   float dbd = sd_ellipse(p + vec2(0, -0.05), vec2(0.25, 0.18));
   float dhd = sd_circle(p + vec2(0.08, 0.1), 0.13);
   
-  float d = min(dbd, dhd);
+  const float k = 0.015;
+  float d = -k * log2(exp2(-dbd / k) + exp2(-dhd / k));
   c = mix(vec3(0.8, 0.6, 0.3), c, step(0, d));
   c = c_border(p, c, d);
 
