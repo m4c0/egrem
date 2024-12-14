@@ -178,7 +178,7 @@ static void init_meta() {
 
   g_prizes[b_store] = b_trash;
   g_prizes[b_brick] = b_pig;
-  g_prizes[b_egg] = b_chicken;
+  g_prizes[b_egg  ] = b_chicken;
 }
 
 static auto map(dotz::ivec2 p) { 
