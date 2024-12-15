@@ -590,6 +590,17 @@ vec3 computer(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 berlin(vec2 p, vec3 c) {
+  vec3 cc = vec3(0);
+  cc = mix(cc, vec3(0.6, 0.0, 0.0), step(-0.2/3.0, p.y));
+  cc = mix(cc, vec3(0.5, 0.3, 0.0), step(0.2/3.0, p.y));
+
+  float d = sd_box(p, vec2(0.3, 0.2));
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 chicken(vec2 p, vec3 c) {
   float dbd = sd_ellipse(p + vec2(0, -0.05), vec2(0.25, 0.18));
   float dhd = sd_circle(p + vec2(0.08, 0.1), 0.13);
@@ -673,6 +684,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 24) return can(p, c);
   else if (spr == 25) return metal_bar(p, c);
   else if (spr == 26) return tool(p, c);
+  else if (spr == 27) return berlin(p, c);
   else if (spr == 28) return computer(p, c);
   else if (spr == 29) return phone(p, c);
   else if (spr == 30) return iphone(p, c);

@@ -45,7 +45,7 @@ enum block : uint8_t {
   b_can       = 24,
   b_metal     = 25,
   b_tool      = 26,
-  b_berlin    = 27, // TODO
+  b_berlin    = 27,
   b_computer  = 28,
   b_phone     = 29,
   b_iphone    = 30,
