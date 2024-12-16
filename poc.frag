@@ -273,6 +273,15 @@ vec3 hat(vec2 p, vec3 c) {
 }
 
 vec3 egg(vec2 p, vec3 c) {
+  p.y *= -1;
+  p.y += 0.03;
+
+  float d = sd_egg(p, 0.2, 0.1);
+  c = mix(vec3(0.7, 0.6, 0.5), c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+vec3 easteregg(vec2 p, vec3 c) {
   float h = round(0.2 * sin(20 * p.x) + 6.0 + p.y * 9.0) / 9.0;
   vec3 cc = hsv2rgb(vec3(h, 0.9, 0.6));
 
@@ -669,7 +678,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 9) return soup(p, c);
   else if (spr == 10) return outfit(p, c);
   else if (spr == 11) return store(p, c);
-  else if (spr == 12) return egg(p, c);
+  else if (spr == 12) return easteregg(p, c);
   else if (spr == 13) return straw(p, c);
   else if (spr == 14) return stick(p, c);
   else if (spr == 15) return brick(p, c);
@@ -690,6 +699,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 30) return iphone(p, c);
   else if (spr == 31) return world(p, c);
   else if (spr == 32) return chicken(p, c);
+  else if (spr == 33) return egg(p, c);
   else return tbd(p, c); // Should not happen
 }
 
