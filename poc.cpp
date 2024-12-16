@@ -30,7 +30,7 @@ enum block : uint8_t {
   b_soup      =  9,
   b_outfit    = 10,
   b_store     = 11,
-  b_egg       = 12,
+  b_easteregg = 12,
   b_straw     = 13,
   b_stick     = 14,
   b_brick     = 15,
@@ -51,6 +51,7 @@ enum block : uint8_t {
   b_iphone    = 30,
   b_world     = 31,
   b_chicken   = 32,
+  b_egg       = 33,
 };
 
 struct upc {
@@ -120,6 +121,8 @@ static constexpr auto g_domain = [] {
   res.movers[b_straw  ][b_straw  ] = merge<b_hat>;
   res.movers[b_hat    ][b_hat    ] = merge<b_fan>;
 
+  res.movers[b_chicken][b_empty] = merge<b_egg>;
+
   // Three little pigs
   res.movers[b_fan  ][b_straw] = spawn<b_stick>;
   res.movers[b_stick][b_stick] = merge<b_fire>;
@@ -140,9 +143,9 @@ static constexpr auto g_domain = [] {
   res.movers[b_computer][b_computer] = merge<b_world>;
 
   // Easter Eggs
-  res.movers[b_shorts][b_soup] = merge<b_egg>;    // Stardew Valley
-  res.movers[b_brick ][b_wall] = merge<b_music>;  // Pink Floyd
-  res.movers[b_tool  ][b_wall] = merge<b_berlin>; // Fall of Berlin Wall
+  res.movers[b_shorts][b_soup] = merge<b_easteregg>; // Stardew Valley
+  res.movers[b_brick ][b_wall] = merge<b_music>;     // Pink Floyd
+  res.movers[b_tool  ][b_wall] = merge<b_berlin>;    // Fall of Berlin Wall
 
   // TODO: static assertions
   // - exactly one rule resulting in a object
@@ -174,11 +177,11 @@ static void init_meta() {
   g_unlocks[6][5] = b_store;
 
   g_unlocks[6][2] = b_music;
-  g_unlocks[6][6] = b_egg;
+  g_unlocks[6][6] = b_easteregg;
 
-  g_prizes[b_store] = b_trash;
-  g_prizes[b_brick] = b_pig;
-  g_prizes[b_egg  ] = b_chicken;
+  g_prizes[b_store]     = b_trash;
+  g_prizes[b_brick]     = b_pig;
+  g_prizes[b_easteregg] = b_chicken;
 }
 
 static auto map(dotz::ivec2 p) { 
