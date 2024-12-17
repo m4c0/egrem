@@ -100,7 +100,6 @@ static constexpr auto g_domain = [] {
   }
 
   // TODO/Thoughts:
-  // - outfit + hat (or fan) = store?
   // - outfit + hat = scarecrow or one-piece ref?
   // - outfit + tool? = some minecraft ref? tnt?
   // - foo + fan = fan of foo?
@@ -131,9 +130,8 @@ static constexpr auto g_domain = [] {
 
   res.movers[b_pig   ][b_empty ] = spawn<b_shroom>;
   res.movers[b_shroom][b_shroom] = merge<b_soup>;
-
   res.movers[b_soup  ][b_soup  ] = merge<b_can>;
-  res.movers[b_trash ][b_can   ] = spawn<b_metal>;
+  res.movers[b_can   ][b_can   ] = spawn<b_metal>;
   res.movers[b_metal ][b_stick ] = merge<b_tool>;
 
   res.movers[b_fire    ][b_wall ] = merge<b_computer>;
