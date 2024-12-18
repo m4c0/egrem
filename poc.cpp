@@ -52,6 +52,7 @@ enum block : uint8_t {
   b_world     = 31,
   b_chicken   = 32,
   b_egg       = 33,
+  b_basket    = 34,
 };
 
 struct upc {
@@ -121,6 +122,7 @@ static constexpr auto g_domain = [] {
   res.movers[b_hat    ][b_hat    ] = merge<b_fan>;
 
   res.movers[b_chicken][b_empty] = spawn<b_egg>;
+  res.movers[b_egg    ][b_egg  ] = spawn<b_basket>;
 
   // Three little pigs
   res.movers[b_fan  ][b_straw] = spawn<b_stick>;

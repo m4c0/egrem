@@ -294,6 +294,34 @@ vec3 easteregg(vec2 p, vec3 c) {
   return c;
 }
 
+vec2 op_rot(vec2 p, float r) {
+  mat2 m = mat2(cos(r), -sin(r), sin(r), cos(r));
+  return m * p;
+}
+vec3 basket(vec2 p, vec3 c) {
+  p.y *= -1;
+
+  vec2 pp = p - vec2(0, 0.05);
+
+  float d;
+  d = sd_egg(pp + vec2(0, -0.05), 0.1, 0.05);
+  c = mix(vec3(0.6, 0.5, 0.4), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_egg(op_rot(pp, -0.2) + vec2(-0.1, 0), 0.1, 0.05);
+  c = mix(vec3(0.7, 0.55, 0.45), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_egg(op_rot(pp, 0.2) + vec2(0.1, 0), 0.1, 0.05);
+  c = mix(vec3(0.7, 0.6, 0.5), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_trapezoid(p + vec2(0, 0.1), 0.15, 0.2, 0.1) - 0.05;
+  c = mix(vec3(0.3, 0.1, 0.01), c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 float brick_sdf(vec3 p) {
   const float tx = 1;
   const mat3 rx = mat3(
@@ -700,6 +728,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 31) return world(p, c);
   else if (spr == 32) return chicken(p, c);
   else if (spr == 33) return egg(p, c);
+  else if (spr == 34) return basket(p, c);
   else return tbd(p, c); // Should not happen
 }
 
