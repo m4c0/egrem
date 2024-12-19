@@ -322,6 +322,22 @@ vec3 basket(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 eggplant(vec2 p, vec3 c) {
+  p.y *= -1;
+
+  float d0 = sd_circle(p - vec2(0.1), 0.10);
+  float d1 = sd_circle(p + vec2(0.1), 0.15);
+  const float k = 0.08;
+  float d = -k * log2(exp2(-d0 / k) + exp2(-d1 / k));
+  c = mix(vec3(0.2, 0.03, 0.1), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_circle(p - vec2(0.12), 0.13);
+  c = mix(vec3(0.03, 0.2, 0.05), c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 float brick_sdf(vec3 p) {
   const float tx = 1;
   const mat3 rx = mat3(
@@ -729,6 +745,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 32) return chicken(p, c);
   else if (spr == 33) return egg(p, c);
   else if (spr == 34) return basket(p, c);
+  else if (spr == 35) return eggplant(p, c);
   else return tbd(p, c); // Should not happen
 }
 
