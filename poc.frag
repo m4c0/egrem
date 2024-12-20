@@ -674,6 +674,21 @@ vec3 chicken(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 beer(vec2 p, vec3 c) {
+  p.x -= 0.05;
+
+  float di = sd_box(p + vec2(0, 0.1), vec2(0.12, 0.25));
+  vec3 cc = mix(c, vec3(0.8), 0.3);
+  vec3 ccc = mix(vec3(1.0), vec3(0.7, 0.6, 0.1), smoothstep(-0.1, -0.08, p.y)); 
+  cc = mix(ccc, cc, smoothstep(-0.02, 0.02, di));
+
+  float d = abs(sd_box(p + vec2(0.17, 0), vec2(0.1))) - 0.03;
+  d = min(d, sd_box(p, vec2(0.12, 0.15)) - 0.05);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 world(vec2 p, vec3 c) {
   float de = sd_circle(p, 0.25);
 
@@ -746,6 +761,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 33) return egg(p, c);
   else if (spr == 34) return basket(p, c);
   else if (spr == 35) return eggplant(p, c);
+  else if (spr == 36) return beer(p, c);
   else return tbd(p, c); // Should not happen
 }
 

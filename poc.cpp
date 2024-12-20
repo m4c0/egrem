@@ -54,6 +54,7 @@ enum block : uint8_t {
   b_egg       = 33,
   b_basket    = 34,
   b_eggplant  = 35,
+  b_beer      = 36,
 };
 
 struct upc {
@@ -144,6 +145,8 @@ static constexpr auto g_domain = [] {
   res.movers[b_computer][b_computer] = merge<b_world>;
 
   res.movers[b_egg][b_wheat] = merge<b_eggplant>;
+
+  res.movers[b_wheat][b_shroom] = merge<b_beer>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_easteregg>; // Stardew Valley
