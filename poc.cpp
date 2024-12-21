@@ -109,6 +109,7 @@ static constexpr auto g_domain = [] {
   // - add ref to Ayrton Senna (car + brazil?)
   // - berin + ? = car?
   // - ball? (brazil = ball + outfit?)
+  // - root beer?
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
