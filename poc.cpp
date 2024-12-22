@@ -110,6 +110,7 @@ static constexpr auto g_domain = [] {
   // - berin + ? = car?
   // - ball? (brazil = ball + outfit?)
   // - root beer?
+  // - cow > milk > cheese?
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
