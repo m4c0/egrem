@@ -55,6 +55,9 @@ enum block : uint8_t {
   b_basket    = 34,
   b_eggplant  = 35,
   b_beer      = 36,
+  b_cow       = 37, // TODO
+  b_milk      = 38, // TODO
+  b_cheese    = 39, // TODO
 };
 
 struct upc {
@@ -95,10 +98,11 @@ static constexpr auto g_domain = [] {
     row[b_locked] = unlock;
   }
   for (auto i = 0; i < 256; i++) {
-    if (i == b_pig) continue;
-    if (i == b_sheep) continue;
+    if (i == b_pig)     continue;
+    if (i == b_sheep)   continue;
     if (i == b_chicken) continue;
-    if (i == b_trash) continue;
+    if (i == b_cow)     continue;
+    if (i == b_trash)   continue;
     res.movers[i][b_trash] = trash;
   }
 
@@ -110,7 +114,6 @@ static constexpr auto g_domain = [] {
   // - berin + ? = car?
   // - ball? (brazil = ball + outfit?)
   // - root beer?
-  // - cow > milk > cheese?
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
@@ -127,6 +130,9 @@ static constexpr auto g_domain = [] {
 
   res.movers[b_chicken][b_empty] = spawn<b_egg>;
   res.movers[b_egg    ][b_egg  ] = spawn<b_basket>;
+
+  res.movers[b_cow ][b_empty] = spawn<b_milk>;
+  res.movers[b_milk][b_milk ] = spawn<b_cheese>;
 
   // Three little pigs
   res.movers[b_fan  ][b_straw] = spawn<b_stick>;
