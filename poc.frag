@@ -27,6 +27,10 @@ vec4 op_rep(vec2 p) {
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
+float smin(float a, float b, float k) {
+  return -k * log2(exp2(-a / k) + exp2(-b / k));
+}
+
 vec3 c_border(vec2 p, vec3 c, float d) {
   return mix(vec3(0), c, smoothstep(0, 0.02, abs(d)));
 }
@@ -713,6 +717,37 @@ vec3 world(vec2 p, vec3 c) {
   return c;
 }
 
+vec4 cow_ears(vec2 p, vec3 c) {
+  p.y += 0.13;
+  p.x = abs(p.x) - 0.25;
+  float d = sd_ellipse(p, vec2(0.1, 0.06));
+  c = mix(vec3(0), c, smoothstep(0, 0.01, d));
+  return vec4(c, d);
+}
+
+vec3 cow(vec2 p, vec3 c) {
+  p.y -= 0.03;
+
+  vec4 ear = cow_ears(p, c);
+  c = ear.rgb;
+  float d = ear.a;
+
+  float dm = sd_circle(abs(p - vec2(0, 0.02)) - vec2(0.27, 0), 0.21);
+  vec3 cm = mix(vec3(0), vec3(0.75), smoothstep(0, 0.02, dm));
+
+  float dh = sd_circle(p + vec2(0, 0.20), 0.1);
+  float df = sd_trapezoid(p, 0.15, 0.1, 0.15) - 0.05;
+  d = smin(d, df, 0.007);
+  d = smin(d, dh, 0.04);
+  c = mix(cm, c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_trapezoid(p - vec2(0, 0.15), 0.05, 0.08, 0.02) - 0.05;
+  c = mix(vec3(0.9, 0.3, 0.3), c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 locked(vec2 p, vec3 c) {
   p.x = p.x - 0.15 * round(p.x / 0.15);
   float d = sd_segment(p, vec2(0, -1), vec2(0, 1)) - 0.03;
@@ -762,6 +797,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 34) return basket(p, c);
   else if (spr == 35) return eggplant(p, c);
   else if (spr == 36) return beer(p, c);
+  else if (spr == 37) return cow(p, c);
   else return tbd(p, c); // Should not happen
 }
 
