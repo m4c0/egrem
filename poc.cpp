@@ -55,7 +55,7 @@ enum block : uint8_t {
   b_basket    = 34,
   b_eggplant  = 35,
   b_beer      = 36,
-  b_cow       = 37, // TODO
+  b_cow       = 37,
   b_milk      = 38, // TODO
   b_cheese    = 39, // TODO
 };
