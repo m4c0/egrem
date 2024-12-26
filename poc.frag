@@ -717,6 +717,21 @@ vec3 world(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 milk(vec2 p, vec3 c) {
+  p.y -= 0.10;
+  float d = sd_box(p, vec2(0.10, 0.13)) - 0.05;
+  d = smin(d, sd_box(p + vec2(0, 0.24), vec2(0.07, 0.1)), 0.03);
+  d = min(d, sd_box(p + vec2(0, 0.34), vec2(0.1, 0.03)));
+
+  vec3 cc = vec3(0.0, 0.1, 0.4);
+  cc = mix(cc, vec3(1), step(-0.28, p.y));
+  cc = mix(cc, vec3(0), smoothstep(0, -0.3, p.x));
+  cc = mix(cc, vec3(1), smoothstep(0, 0.4, p.x));
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec4 cow_ears(vec2 p, vec3 c) {
   p.y += 0.13;
   p.x = abs(p.x) - 0.25;
@@ -798,6 +813,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 35) return eggplant(p, c);
   else if (spr == 36) return beer(p, c);
   else if (spr == 37) return cow(p, c);
+  else if (spr == 38) return milk(p, c);
   else return tbd(p, c); // Should not happen
 }
 
