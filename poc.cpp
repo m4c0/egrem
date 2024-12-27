@@ -58,6 +58,10 @@ enum block : uint8_t {
   b_cow       = 37,
   b_milk      = 38,
   b_cheese    = 39, // TODO
+  b_ball      = 40, // TODO
+  b_car       = 41, // TODO
+  b_senna     = 42, // TODO
+  b_brazil    = 43, // TODO
 };
 
 struct upc {
@@ -110,9 +114,6 @@ static constexpr auto g_domain = [] {
   // - outfit + hat = scarecrow or one-piece ref?
   // - outfit + tool? = some minecraft ref? tnt?
   // - foo + fan = fan of foo?
-  // - add ref to Ayrton Senna (car + brazil?)
-  // - berin + ? = car?
-  // - ball? (brazil = ball + outfit?)
   // - root beer?
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
@@ -135,15 +136,15 @@ static constexpr auto g_domain = [] {
   res.movers[b_milk][b_milk ] = merge<b_cheese>;
 
   // Three little pigs
-  res.movers[b_fan  ][b_straw] = spawn<b_stick>;
+  res.movers[b_fan  ][b_straw] = spawn<b_stick>; // TODO: spawn or merge?
   res.movers[b_stick][b_stick] = merge<b_fire>;
-  res.movers[b_fire ][b_stick] = spawn<b_brick>;
+  res.movers[b_fire ][b_stick] = spawn<b_brick>; // TODO: spawn or merge?
   res.movers[b_brick][b_brick] = merge<b_wall>;
 
   res.movers[b_pig   ][b_empty ] = spawn<b_shroom>;
   res.movers[b_shroom][b_shroom] = merge<b_soup>;
   res.movers[b_soup  ][b_soup  ] = merge<b_can>;
-  res.movers[b_can   ][b_can   ] = spawn<b_metal>;
+  res.movers[b_can   ][b_can   ] = merge<b_metal>;
   res.movers[b_metal ][b_stick ] = merge<b_tool>;
 
   res.movers[b_fire    ][b_wall ] = merge<b_computer>;
@@ -155,6 +156,10 @@ static constexpr auto g_domain = [] {
   res.movers[b_egg][b_wheat] = merge<b_eggplant>;
 
   res.movers[b_wheat][b_shroom] = merge<b_beer>;
+
+  res.movers[b_berlin][b_metal ] = merge<b_car>;    // TODO: makes sense?
+  res.movers[b_ball  ][b_outfit] = merge<b_brazil>;
+  res.movers[b_car   ][b_brazil] = merge<b_senna>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_easteregg>; // Stardew Valley
