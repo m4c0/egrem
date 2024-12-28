@@ -657,6 +657,33 @@ vec3 berlin(vec2 p, vec3 c) {
   c = c_border(p, c, d);
   return c;
 }
+vec3 brazil(vec2 p, vec3 c) {
+  const vec3 g = pow(vec3(0, 0.58, 0.22), vec3(2.2));
+  const vec3 y = pow(vec3(0.99, 0.86, 0), vec3(2.2));
+  const vec3 b = pow(vec3(0.01, 0.13, 0.41), vec3(2.2));
+  const vec3 w = vec3(1);
+
+  vec2 pp = p;
+  pp /= vec2(0.3, 0.2);
+  pp = abs(pp);
+
+  float dy = pp.x + pp.y;
+  dy = smoothstep(1, 1.01, dy);
+
+  float db = sd_circle(p, 0.1);
+
+  float dw = sd_circle(p + vec2(0.05, -0.24), 0.27);
+  dw = abs(dw) - 0.005;
+  vec3 c0 = mix(w, b, smoothstep(0, 0.01, dw));
+
+  vec3 cc = mix(y, g, dy);
+  cc = mix(c0, cc, smoothstep(0, 0.01, db));
+
+  float d = sd_box(p, vec2(0.3, 0.2));
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
 
 vec3 chicken(vec2 p, vec3 c) {
   float dbd = sd_ellipse(p + vec2(0, -0.05), vec2(0.25, 0.18));
@@ -814,6 +841,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 36) return beer(p, c);
   else if (spr == 37) return cow(p, c);
   else if (spr == 38) return milk(p, c);
+  else if (spr == 43) return brazil(p, c);
   else return tbd(p, c); // Should not happen
 }
 
