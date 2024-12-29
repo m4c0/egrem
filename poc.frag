@@ -759,17 +759,13 @@ vec3 car(vec2 p, vec3 c) {
   d = min(d, dc);
   d = max(d, sd_box(p + vec2(0, 0.2), vec2(1.0, 0.2)));
 
-  d = max(d, -sd_circle(p - vec2(0.14, 0.0), 0.08));
+  float dt = sd_circle(p - vec2(0.14, 0.0), 0.08);
+  d = max(d, -dt);
   c = mix(vec3(0.5), c, step(0, d));
   c = c_border(p, c, d);
 
-  d = sd_circle(p - vec2(0.14, 0.0), 0.05);
-  c = mix(vec3(0.0), c, step(0, d));
-  c = c_border(p, c, d);
-
-  d = sd_circle(p - vec2(0.14, 0.0), 0.03);
-  c = mix(vec3(0.5), c, step(0, d));
-  c = c_border(p, c, d);
+  c = mix(vec3(0.0), c, smoothstep(-0.02, -0.01, dt));
+  c = mix(vec3(0.5), c, smoothstep(-0.05, -0.04, dt));
 
   return c;
 }
