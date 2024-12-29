@@ -59,9 +59,9 @@ enum block : uint8_t {
   b_milk      = 38,
   b_cheese    = 39, // TODO
   b_ball      = 40, // TODO
-  b_car       = 41, // TODO
+  b_car       = 41,
   b_senna     = 42, // TODO
-  b_brazil    = 43, // TODO
+  b_brazil    = 43,
 };
 
 struct upc {

@@ -744,6 +744,36 @@ vec3 world(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 car(vec2 p, vec3 c) {
+  p.y -= 0.15;
+
+  const float sc = 0.26;
+  vec2 pc = p + vec2(0, 0.06);
+  float dc = sd_circle(pc, sc);
+  dc = max(dc, sd_box(pc - vec2(sc, 0), vec2(sc)));
+
+  float d;
+  p.x = abs(p.x);
+  d = sd_circle(p - vec2(0.1, 0.0), 0.2);
+  d = min(d, sd_circle(p + vec2(0, 0.15), 0.17));
+  d = min(d, dc);
+  d = max(d, sd_box(p + vec2(0, 0.2), vec2(1.0, 0.2)));
+
+  d = max(d, -sd_circle(p - vec2(0.14, 0.0), 0.08));
+  c = mix(vec3(0.5), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_circle(p - vec2(0.14, 0.0), 0.05);
+  c = mix(vec3(0.0), c, step(0, d));
+  c = c_border(p, c, d);
+
+  d = sd_circle(p - vec2(0.14, 0.0), 0.03);
+  c = mix(vec3(0.5), c, step(0, d));
+  c = c_border(p, c, d);
+
+  return c;
+}
+
 vec3 milk(vec2 p, vec3 c) {
   p.y -= 0.10;
   float d = sd_box(p, vec2(0.10, 0.13)) - 0.05;
@@ -841,6 +871,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 36) return beer(p, c);
   else if (spr == 37) return cow(p, c);
   else if (spr == 38) return milk(p, c);
+  else if (spr == 41) return car(p, c);
   else if (spr == 43) return brazil(p, c);
   else return tbd(p, c); // Should not happen
 }
