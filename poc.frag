@@ -745,6 +745,7 @@ vec3 world(vec2 p, vec3 c) {
 }
 
 vec3 car(vec2 p, vec3 c) {
+  vec3 cb = mix(c, vec3(1), 0.3);
   p.y -= 0.15;
 
   const float sc = 0.26;
@@ -766,6 +767,10 @@ vec3 car(vec2 p, vec3 c) {
 
   c = mix(vec3(0.0), c, smoothstep(-0.02, -0.01, dt));
   c = mix(vec3(0.5), c, smoothstep(-0.05, -0.04, dt));
+
+  float dw = max(d, sd_box(pc + vec2(0, 0.2), vec2(1, 0.12)));
+  c = mix(vec3(0.0), c, smoothstep(-0.05, -0.04, dw));
+  c = mix(cb, c, smoothstep(-0.07, -0.06, dw));
 
   return c;
 }
