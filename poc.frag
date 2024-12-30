@@ -720,6 +720,31 @@ vec3 beer(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 ball(vec2 p, vec3 c) {
+  vec3 cc;
+
+  const float sp = (3.1415926535 * 2.0) / 5.0;
+  const vec2 s1 = op_rot(vec2(1, 0), sp * 0.5);
+  const vec2 s2 = op_rot(vec2(1, 0), sp * -0.5);
+  float id = round(atan(p.y, p.x) / sp);
+  vec2 pp = op_rot(p, sp * id);
+  float db = sd_box(pp, vec2(0.09));
+  db = min(db, sd_segment(pp, vec2(0), s1));
+  db = min(db, sd_segment(pp, vec2(0), s2));
+  db = min(db, sd_segment(pp, vec2(0.22, -1), vec2(0.22, 1.0)));
+  db = min(db, sd_box(op_rot(pp - vec2(0.18, 0.19), sp - 0.15), vec2(0.1)));
+  db = min(db, sd_box(op_rot(pp - vec2(0.18, -0.19), sp + 0.6), vec2(0.1)));
+  cc = mix(vec3(0.02), vec3(0.8), smoothstep(0, 0.01, db));
+
+  float ds = sd_circle(p + 0.25, 0.5);
+  cc = mix(cc, vec3(0), smoothstep(-0.4, 0, ds) * 0.8);
+
+  float d = sd_circle(p, 0.25);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec3 world(vec2 p, vec3 c) {
   float de = sd_circle(p, 0.25);
 
@@ -873,7 +898,10 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 36) return beer(p, c);
   else if (spr == 37) return cow(p, c);
   else if (spr == 38) return milk(p, c);
+  //else if (spr == 39) return cheese(p, c); // TODO
+  else if (spr == 40) return ball(p, c); // TODO
   else if (spr == 41) return car(p, c);
+  //else if (spr == 42) return senna(p, c); // TODO
   else if (spr == 43) return brazil(p, c);
   else return tbd(p, c); // Should not happen
 }
