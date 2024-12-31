@@ -685,12 +685,31 @@ vec3 brazil(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 senna_v_colour(float y) {
+  const vec3 black = vec3(0.005);
+  const vec3 green = vec3(0.0, 0.4, 0.0);
+  const vec3 yellow = vec3(0.7, 0.5, 0);
+  const vec3 white = vec3(0.8);
+
+  vec3 c = yellow;
+
+  c = mix(white, c, step(0.04, abs(y + 0.07)));
+  c = mix(green, c, step(0.03, abs(y + 0.07)));
+  
+  c = mix(white, c, step(0.04, abs(y - 0.1)));
+  c = mix(black, c, step(0.03, abs(y - 0.1)));
+  return c;
+}
 vec3 senna(vec2 p, vec3 c) {
   float d0 = sd_circle(p, 0.25);
   float d1 = sd_trapezoid(p - vec2(-0.03, 0.12), 0.225, 0.17, 0.077) - 0.05;
   float d2 = sd_parabola(op_rot(p + vec2(0.28, 0), -1.6), 0.1, 0.2);
   float d = min(d0, d1);
   d = max(d, -d2);
+
+  vec3 cc = senna_v_colour(p.y);
+
+  c = mix(cc, c, step(0, d));
   c = c_border(p, c, d);
 
   d = sd_box(p - vec2(-0.03, 0.24), vec2(0.21, 0.005)) - 0.01;
