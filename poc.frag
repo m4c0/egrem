@@ -725,16 +725,35 @@ vec3 senna_visor(vec2 p, vec3 c) {
   cc = mix(vec3(0.005), cc, smoothstep(0, 0.01, d0));
   return cc;
 }
+vec3 senna_details(vec2 p, vec3 cc) {
+  vec3 black = vec3(0.005);
+  vec3 white = vec3(1.0);
+
+  float d = sd_box(p + vec2(0.08, -0.18), vec2(0.04, 0.02));
+  cc = mix(black, cc, smoothstep(0, 0.01, d));
+  cc = mix(white, cc, smoothstep(-0.06, 0.0, d));
+
+  d = sd_box(p + vec2(0.37, -0.18), vec2(0.2, 0.02));
+  cc = mix(black, cc, smoothstep(0, 0.01, d));
+  cc = mix(white, cc, smoothstep(-0.06, 0.0, d));
+
+  d = sd_trapezoid(p + vec2(-0.1, 0.13), 0.1, 0.1, 0.01);
+  cc = mix(black, cc, smoothstep(0, 0.01, d));
+  cc = mix(white, cc, smoothstep(-0.06, 0.0, d));
+
+  return cc;
+}
 vec3 senna(vec2 p, vec3 c) {
   float d0 = sd_circle(p, 0.25);
   float d1 = sd_trapezoid(p - vec2(-0.03, 0.12), 0.225, 0.17, 0.077) - 0.05;
   float d2 = sd_parabola(op_rot(p + vec2(0.3, 0), -1.6), 0.1, 0.2);
-  float d = min(d0, d1);
-  d = max(d, -d2);
+  float d3 = min(d0, d1);
+  float d = max(d3, -d2);
 
   vec3 cc = vec3(0.7, 0.5, 0);
   cc = mix(cc, c, step(0, d));
   cc = senna_v_colour(p.y, cc);
+  cc = senna_details(p, cc);
   cc = mix(cc, c, step(0, d));
   cc = c_border(p, cc, d);
 
