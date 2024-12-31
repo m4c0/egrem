@@ -685,6 +685,20 @@ vec3 brazil(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 senna(vec2 p, vec3 c) {
+  float d0 = sd_circle(p, 0.25);
+  float d1 = sd_trapezoid(p - vec2(-0.03, 0.12), 0.225, 0.17, 0.077) - 0.05;
+  float d2 = sd_parabola(op_rot(p + vec2(0.28, 0), -1.6), 0.1, 0.2);
+  float d = min(d0, d1);
+  d = max(d, -d2);
+  c = c_border(p, c, d);
+
+  d = sd_box(p - vec2(-0.03, 0.24), vec2(0.21, 0.005)) - 0.01;
+  c = mix(vec3(0), c, smoothstep(0, 0.01, d));
+
+  return c;
+}
+
 vec3 chicken(vec2 p, vec3 c) {
   float dbd = sd_ellipse(p + vec2(0, -0.05), vec2(0.25, 0.18));
   float dhd = sd_circle(p + vec2(0.08, 0.1), 0.13);
@@ -901,7 +915,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   //else if (spr == 39) return cheese(p, c); // TODO
   else if (spr == 40) return ball(p, c); // TODO
   else if (spr == 41) return car(p, c);
-  //else if (spr == 42) return senna(p, c); // TODO
+  else if (spr == 42) return senna(p, c); // TODO
   else if (spr == 43) return brazil(p, c);
   else return tbd(p, c); // Should not happen
 }
