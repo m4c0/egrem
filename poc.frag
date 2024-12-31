@@ -685,13 +685,10 @@ vec3 brazil(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 senna_v_colour(float y) {
+vec3 senna_v_colour(float y, vec3 c) {
   const vec3 black = vec3(0.005);
   const vec3 green = vec3(0.0, 0.4, 0.0);
-  const vec3 yellow = vec3(0.7, 0.5, 0);
   const vec3 white = vec3(0.8);
-
-  vec3 c = yellow;
 
   c = mix(white, c, step(0.04, abs(y + 0.07)));
   c = mix(green, c, step(0.03, abs(y + 0.07)));
@@ -700,22 +697,53 @@ vec3 senna_v_colour(float y) {
   c = mix(black, c, step(0.03, abs(y - 0.1)));
   return c;
 }
+vec3 senna_visor(vec2 p, vec3 c) {
+  vec3 cc = c;
+
+  vec2 p0 = p + vec2(0, 0.03);
+  float d0 = sd_circle(p0, 0.04);
+
+  vec3 oc = mix(c, vec3(1), 0.2);
+
+  vec2 p1 = p + vec2(0.17, -0.006);
+  float d1 = sd_trapezoid(p1, 0.08, 0.12, 0.075);
+  float d2 = sd_circle(p0, 0.04);
+  float d3 = sd_circle(p0 + vec2(0.07, -0.04), 0.06);
+  float d4 = smin(d2, d3, 0.02);
+
+  float d = min(d1, d4);
+  cc = mix(oc, cc, smoothstep(0, 0.01, d));
+  cc = c_border(p1, cc, d); 
+
+  p1.y += 0.06;
+  float d5 = sd_trapezoid(p1, 0.08, 0.10, 0.016);
+  d5 = max(d, d5);
+  float d6 = d5 * (1 - step(0, p1.x));
+  vec3 c5 = mix(vec3(0.005), vec3(1.0), smoothstep(0, -0.03, d6));
+  cc = mix(c5, cc, smoothstep(0, 0.01, d5));
+
+  cc = mix(vec3(0.005), cc, smoothstep(0, 0.01, d0));
+  return cc;
+}
 vec3 senna(vec2 p, vec3 c) {
   float d0 = sd_circle(p, 0.25);
   float d1 = sd_trapezoid(p - vec2(-0.03, 0.12), 0.225, 0.17, 0.077) - 0.05;
-  float d2 = sd_parabola(op_rot(p + vec2(0.28, 0), -1.6), 0.1, 0.2);
+  float d2 = sd_parabola(op_rot(p + vec2(0.3, 0), -1.6), 0.1, 0.2);
   float d = min(d0, d1);
   d = max(d, -d2);
 
-  vec3 cc = senna_v_colour(p.y);
+  vec3 cc = vec3(0.7, 0.5, 0);
+  cc = mix(cc, c, step(0, d));
+  cc = senna_v_colour(p.y, cc);
+  cc = mix(cc, c, step(0, d));
+  cc = c_border(p, cc, d);
 
-  c = mix(cc, c, step(0, d));
-  c = c_border(p, c, d);
+  cc = senna_visor(p, cc);
 
   d = sd_box(p - vec2(-0.03, 0.24), vec2(0.21, 0.005)) - 0.01;
-  c = mix(vec3(0), c, smoothstep(0, 0.01, d));
+  cc = mix(vec3(0), cc, smoothstep(0, 0.01, d));
 
-  return c;
+  return cc;
 }
 
 vec3 chicken(vec2 p, vec3 c) {
