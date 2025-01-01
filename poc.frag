@@ -746,9 +746,11 @@ vec3 senna_details(vec2 p, vec3 cc) {
 vec3 senna_marlboro(vec2 p, vec3 c, float d) {
   float d0 = d + 0.06;
   float d1 = abs(p.y + 0.12) - 0.06;
-  d = smoothstep(0, 0.01, d0) * (1 - step(0, d1)) * (1 - step(0, p.x));
-  vec3 cc = mix(vec3(0.9), vec3(0.7, 0.0, 0.0), step(0, p.x - p.y + 0.03));
-  c = mix(c, cc, d);
+  c = mix(c, vec3(0.9), smoothstep(0, 0.01, d0) * (1 - step(0, d1)) * (1 - step(0, p.x)));
+
+  d0 -= 0.01;
+  d1 += 0.005;
+  c = mix(c, vec3(0.9, 0, 0), smoothstep(0, 0.01, d0) * (1 - step(0, d1)) * (1 - step(0, p.x)) * step(0, p.x - p.y + 0.02));
   return c;
 }
 vec3 senna(vec2 p, vec3 c) {
