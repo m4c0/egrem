@@ -743,6 +743,14 @@ vec3 senna_details(vec2 p, vec3 cc) {
 
   return cc;
 }
+vec3 senna_marlboro(vec2 p, vec3 c, float d) {
+  float d0 = d + 0.06;
+  float d1 = abs(p.y + 0.12) - 0.06;
+  d = smoothstep(0, 0.01, d0) * (1 - step(0, d1)) * (1 - step(0, p.x));
+  vec3 cc = mix(vec3(0.9), vec3(0.7, 0.0, 0.0), step(0, p.x - p.y + 0.03));
+  c = mix(c, cc, d);
+  return c;
+}
 vec3 senna(vec2 p, vec3 c) {
   float d0 = sd_circle(p, 0.25);
   float d1 = sd_trapezoid(p - vec2(-0.03, 0.12), 0.225, 0.17, 0.077) - 0.05;
@@ -754,6 +762,7 @@ vec3 senna(vec2 p, vec3 c) {
   cc = mix(cc, c, step(0, d));
   cc = senna_v_colour(p.y, cc);
   cc = senna_details(p, cc);
+  cc = senna_marlboro(p, cc, d3);
   cc = mix(cc, c, step(0, d));
   cc = c_border(p, cc, d);
 
