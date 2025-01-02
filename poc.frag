@@ -342,7 +342,7 @@ vec3 eggplant(vec2 p, vec3 c) {
   return c;
 }
 
-float brick_sdf(vec3 p) {
+vec3 op_rot_brick(vec3 p) {
   const float tx = 1;
   const mat3 rx = mat3(
     cos(tx),  0, -sin(tx),
@@ -362,11 +362,22 @@ float brick_sdf(vec3 p) {
     0,       0,        1
   );
   const mat3 rot = rz * ry * rx;
-  return sd_box_3d(rot * p, vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
+  return rot * p;
+}
+
+float brick_sdf(vec3 p) {
+  return sd_box_3d(op_rot_brick(p), vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
 }
 float cheese_sdf(vec3 p) {
-  float d = sd_iso_triangle(p.xy, vec2(0.1, 0.1));
-  return op_extrusion_3d(p, d, 0.1);
+  const float h = 0.4;
+  p.y += h / 2.0;
+
+  p.x -= 0.13;
+  p.y -= 0.07;
+  p = op_rot_brick(p);
+
+  float d = sd_iso_triangle(p.xy, vec2(0.1, h));
+  return op_extrusion_3d(p, d, 0.1) - 0.02;
 } 
 float sdf_3d(vec3 p, uint fn) {
   if (fn == 0) return brick_sdf(p);
@@ -428,7 +439,11 @@ vec3 cheese(vec2 p, vec3 c) {
   float amb = raym.z;
   float dif = raym.w;
   
+  vec3 amb_c = vec3(0.2, 0.1, 0.0);
+  vec3 dif_c = vec3(0.5, 0.4, 0.0);
+  vec3 cc = amb_c * amb + dif_c * dif;
   c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
+  c = mix(cc, c, step(1, t));
   return c;
 }
 
