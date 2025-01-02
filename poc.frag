@@ -364,16 +364,25 @@ float brick_sdf(vec3 p) {
   const mat3 rot = rz * ry * rx;
   return sd_box_3d(rot * p, vec3(0.1, 0.2, 0.3) * 0.8, 0.02);
 }
-vec3 brick_fn(vec2 p, vec3 c, vec3 amb_c, vec3 dif_c) {
-  // raymarch
+float cheese_sdf(vec3 p) {
+  float d = sd_iso_triangle(p.xy, vec2(0.1, 0.1));
+  return op_extrusion_3d(p, d, 0.1);
+} 
+float sdf_3d(vec3 p, uint fn) {
+  if (fn == 0) return brick_sdf(p);
+  if (fn == 1) return cheese_sdf(p);
+  return 0; // unreachable
+}
+vec4 raymarch(vec2 p, uint fn) {
   float t = -1.0;
   float d = 10.0;
   for (int i = 0; i < 16; i++) {
-    float h = brick_sdf(vec3(p, t));
+    float h = sdf_3d(vec3(p, t), fn);
     d = min(d, h);
     if (h < 0.001 || t > 1) break;
     t += h;
   }
+
   // normals - https://iquilezles.org/articles/normalsSDF
   const vec2 e = vec2(1.0, -1.0) * 0.5773; // 0.5773 ~= sqrt(3)/3
   const float eps = 0.0005;
@@ -386,8 +395,18 @@ vec3 brick_fn(vec2 p, vec3 c, vec3 amb_c, vec3 dif_c) {
 
   float dif = clamp(dot(-nor, vec3(0.5773)), 0.0, 1.0);
   float amb = 0.5 + 0.5 * dot(nor, vec3(0.0, 1.0, 0.0));
-  vec3 cc = amb_c * amb + dif_c * dif;
 
+  return vec4(d, t, amb, dif);
+}
+
+vec3 brick_fn(vec2 p, vec3 c, vec3 amb_c, vec3 dif_c) {
+  vec4 raym = raymarch(p, 0);
+  float d = raym.x; 
+  float t = raym.y; 
+  float amb = raym.z;
+  float dif = raym.w;
+
+  vec3 cc = amb_c * amb + dif_c * dif;
   cc *= noise(p) * 0.3 + 0.7;
 
   c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
@@ -400,6 +419,17 @@ vec3 brick(vec2 p, vec3 c) {
 // We can't call it "metal" without making Apple sad
 vec3 metal_bar(vec2 p, vec3 c) {
   return brick_fn(p, c, vec3(0.3, 0.3, 0.3), vec3(0.3, 0.3, 0.3));
+}
+
+vec3 cheese(vec2 p, vec3 c) {
+  vec4 raym = raymarch(p, 1);
+  float d = raym.x; 
+  float t = raym.y; 
+  float amb = raym.z;
+  float dif = raym.w;
+  
+  c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
+  return c;
 }
 
 vec3 wall(vec2 p, vec3 c) {
@@ -989,10 +1019,10 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 36) return beer(p, c);
   else if (spr == 37) return cow(p, c);
   else if (spr == 38) return milk(p, c);
-  //else if (spr == 39) return cheese(p, c); // TODO
-  else if (spr == 40) return ball(p, c); // TODO
+  else if (spr == 39) return cheese(p, c);
+  else if (spr == 40) return ball(p, c);
   else if (spr == 41) return car(p, c);
-  else if (spr == 42) return senna(p, c); // TODO
+  else if (spr == 42) return senna(p, c);
   else if (spr == 43) return brazil(p, c);
   else return tbd(p, c); // Should not happen
 }
