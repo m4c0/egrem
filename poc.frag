@@ -439,8 +439,8 @@ vec3 cheese(vec2 p, vec3 c) {
   float amb = raym.z;
   float dif = raym.w;
   
-  vec3 amb_c = vec3(0.2, 0.1, 0.0);
-  vec3 dif_c = vec3(0.5, 0.4, 0.0);
+  vec3 amb_c = vec3(0.05, 0.01, 0.0);
+  vec3 dif_c = vec3(0.75, 0.35, 0.0);
   vec3 cc = amb_c * amb + dif_c * dif;
   c = mix(vec3(0), c, smoothstep(0, 0.03, abs(d)));
   c = mix(cc, c, step(1, t));
