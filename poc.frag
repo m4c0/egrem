@@ -377,7 +377,9 @@ float cheese_sdf(vec3 p) {
   p = op_rot_brick(p);
 
   float d = sd_iso_triangle(p.xy, vec2(0.1, h));
-  return op_extrusion_3d(p, d, 0.1) - 0.02;
+  d = op_extrusion_3d(p, d, 0.1) - 0.02;
+  d = max(d, -sd_sphere_3d(p + vec3(0, 0.0, 0.05), 0.06));
+  return d;
 } 
 float sdf_3d(vec3 p, uint fn) {
   if (fn == 0) return brick_sdf(p);
