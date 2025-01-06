@@ -54,15 +54,15 @@ static void update_grid(voo::h2l_image * img) {
       ptr->r = blk;
       ptr->g = valid_target;
       ptr->b = game::unlock(p);
-      if (blk != b_locked) {
+      if (blk != game::b_locked) {
         ptr->a = 255;
         continue;
       }
       auto a = 0;
-      if (game::map(p - dotz::ivec2(1, 0)) != b_locked) a++;
-      if (game::map(p + dotz::ivec2(1, 0)) != b_locked) a++;
-      if (game::map(p - dotz::ivec2(0, 1)) != b_locked) a++;
-      if (game::map(p + dotz::ivec2(0, 1)) != b_locked) a++;
+      if (game::map(p - dotz::ivec2(1, 0)) != game::b_locked) a++;
+      if (game::map(p + dotz::ivec2(1, 0)) != game::b_locked) a++;
+      if (game::map(p - dotz::ivec2(0, 1)) != game::b_locked) a++;
+      if (game::map(p + dotz::ivec2(0, 1)) != game::b_locked) a++;
       ptr->a = a > 0 ? 255 : 0;
 
       if (ptr->a > 0) {
