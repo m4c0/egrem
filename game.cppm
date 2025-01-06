@@ -196,6 +196,9 @@ export namespace game {
   auto map(dotz::ivec2 p)    { return get_or(g_map,     p); }
   auto unlock(dotz::ivec2 p) { return get_or(g_unlocks, p); }
   
+  void apply(block & f, block & t) {
+    g_domain.movers[f][t](f, t);
+  }
   void drop(dotz::ivec2 from, dotz::ivec2 to) {
     if (from == to) return;
     if (!valid_pos(from)) return;
@@ -203,7 +206,7 @@ export namespace game {
 
     auto & f = arr(g_map, from);
     auto & t = arr(g_map, to);
-    g_domain.movers[f][t](f, t);
+    apply(f, t);
   }
   bool can_drag(block b) {
     switch (b) {
