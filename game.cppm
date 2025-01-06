@@ -43,10 +43,10 @@ export namespace game {
     b_basket    = 34,
     b_eggplant  = 35,
     b_beer      = 36,
-    b_cow       = 37,
+    b_cow       = 37, // TODO: add unlock
     b_milk      = 38,
     b_cheese    = 39,
-    b_ball      = 40,
+    b_ball      = 40, // TODO: add rule
     b_car       = 41,
     b_senna     = 42,
     b_brazil    = 43,
@@ -146,10 +146,6 @@ static constexpr auto g_domain = [] {
   res.movers[b_shorts][b_soup] = merge<b_easteregg>; // Stardew Valley
   res.movers[b_brick ][b_wall] = merge<b_music>;     // Pink Floyd
   res.movers[b_tool  ][b_wall] = merge<b_berlin>;    // Fall of Berlin Wall
-
-  // TODO: static assertions
-  // - exactly one rule resulting in a object
-  // - never consume animals
   return res;
 }();
 

@@ -5,6 +5,9 @@ import print;
 
 using namespace game;
 
+// TODO: report terminals
+// TODO: validate animals dont die
+// TODO: check if two rules unlock the same item
 int main() {
   init_meta();
 
@@ -17,6 +20,7 @@ int main() {
   }
 
   // Brute-forcing just works
+  putln("solve path:");
   for (auto k = 0; k < 1024; k++) {
     for (auto i = 0; i < b_last; i++) {
       if (!reachable[i]) continue;
@@ -40,7 +44,7 @@ int main() {
     }
   }
 
-  put("reachable: ");
+  put("unreachable: ");
   for (auto i = 0; i < b_last; i++) {
     if (!reachable[i]) put(i, " ");
   }
