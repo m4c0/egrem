@@ -50,6 +50,8 @@ export namespace game {
     b_car       = 41,
     b_senna     = 42,
     b_brazil    = 43,
+    b_water     = 44, // TODO: add rule
+    b_bread     = 45,
     b_last
   };
 }
@@ -135,6 +137,7 @@ static constexpr auto g_domain = [] {
   res.movers[b_computer][b_computer] = merge<b_world>;
 
   res.movers[b_egg][b_wheat] = merge<b_eggplant>;
+  res.movers[b_water][b_wheat] = merge<b_bread>;
 
   res.movers[b_wheat][b_shroom] = merge<b_beer>;
 
