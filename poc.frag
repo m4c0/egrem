@@ -954,6 +954,16 @@ vec3 milk(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 water(vec2 p, vec3 c) {
+  p.y *= -1;
+  p.y += 0.05;
+  vec3 cc = vec3(0, 0.1, 0.5);
+  float d = sd_egg(p, 0.15, 0.001);
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec4 cow_ears(vec2 p, vec3 c) {
   p.y += 0.13;
   p.x = abs(p.x) - 0.25;
@@ -1041,7 +1051,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 41) return car(p, c);
   else if (spr == 42) return senna(p, c);
   else if (spr == 43) return brazil(p, c);
-  // else if (spr == 44) return water(p, c); // TODO
+  else if (spr == 44) return water(p, c); // TODO
   // else if (spr == 45) return bread(p, c); // TODO
   else return tbd(p, c); // Should not happen
 }
