@@ -52,6 +52,8 @@ export namespace game {
     b_brazil    = 43,
     b_water     = 44, // TODO: add rule
     b_bread     = 45,
+    b_pizza     = 46,
+    b_italy     = 47,
     b_last
   };
 }
@@ -144,6 +146,10 @@ static constexpr auto g_domain = [] {
   res.movers[b_berlin][b_metal ] = merge<b_car>;    // TODO: makes sense?
   res.movers[b_ball  ][b_outfit] = merge<b_brazil>;
   res.movers[b_car   ][b_brazil] = merge<b_senna>;
+
+  res.movers[b_cheese][b_bread] = merge<b_pizza>; // TODO: makes sense?
+  res.movers[b_pizza ][b_ball ] = merge<b_italy>;
+  res.movers[b_ball  ][b_pizza] = merge<b_italy>;
 
   // Easter Eggs
   res.movers[b_shorts][b_soup] = merge<b_easteregg>; // Stardew Valley

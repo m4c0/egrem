@@ -1053,6 +1053,8 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 43) return brazil(p, c);
   else if (spr == 44) return water(p, c); // TODO
   // else if (spr == 45) return bread(p, c); // TODO
+  // else if (spr == 46) return pizza(p, c); // TODO
+  // else if (spr == 46) return italy(p, c); // TODO
   else return tbd(p, c); // Should not happen
 }
 
