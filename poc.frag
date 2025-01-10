@@ -731,6 +731,20 @@ vec3 brazil(vec2 p, vec3 c) {
   c = c_border(p, c, d);
   return c;
 }
+vec3 italy(vec2 p, vec3 c) {
+  vec3 green = pow(vec3(0.00, 0.55, 0.27), vec3(2.2));
+  vec3 white = pow(vec3(0.95, 0.97, 1.00), vec3(2.2));
+  vec3 red   = pow(vec3(0.80, 0.13, 0.16), vec3(2.2));
+
+  vec3 cc = white;
+  cc = mix(cc, red, step(0.1, p.x));
+  cc = mix(cc, green, step(0.1, -p.x));
+
+  float d = sd_box(p, vec2(0.3, 0.2));
+  c = mix(cc, c, step(0, d));
+  c = c_border(p, c, d);
+  return c;
+}
 
 vec3 senna_v_colour(float y, vec3 c) {
   const vec3 black = vec3(0.005);
@@ -1054,7 +1068,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 44) return water(p, c); // TODO
   // else if (spr == 45) return bread(p, c); // TODO
   // else if (spr == 46) return pizza(p, c); // TODO
-  // else if (spr == 46) return italy(p, c); // TODO
+  else if (spr == 47) return italy(p, c);
   else return tbd(p, c); // Should not happen
 }
 
