@@ -54,6 +54,7 @@ export namespace game {
     b_bread     = 45,
     b_pizza     = 46,
     b_italy     = 47,
+    b_moon      = 48,
     b_last
   };
 }
@@ -117,8 +118,9 @@ static constexpr auto g_domain = [] {
   res.movers[b_chicken][b_empty] = spawn<b_egg>;
   res.movers[b_egg    ][b_egg  ] = spawn<b_basket>;
 
-  res.movers[b_cow ][b_empty] = spawn<b_milk>;
-  res.movers[b_milk][b_milk ] = merge<b_cheese>;
+  res.movers[b_cow   ][b_empty]  = spawn<b_milk>;
+  res.movers[b_milk  ][b_milk ]  = merge<b_cheese>;
+  res.movers[b_cheese][b_cheese] = merge<b_moon>;
 
   // Three little pigs
   res.movers[b_fan  ][b_straw] = spawn<b_stick>; // TODO: spawn or merge?
