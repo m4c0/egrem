@@ -978,6 +978,31 @@ vec3 water(vec2 p, vec3 c) {
   return c;
 }
 
+vec3 moon(vec2 p, vec3 c) { // TODO: use this
+  vec3 cc = vec3(0.7, 0.6, 0.5);
+  cc *= noise(p + 0.5) * 0.3 + 0.7;
+
+  float d = sd_circle(p, 0.28);
+  c = mix(cc, c, step(0, d));
+
+  c = c_border(p, c, d);
+  return c;
+}
+
+vec3 pizza(vec2 p, vec3 c) {
+  vec3 border = vec3(0.7, 0.6, 0.4) * noise(p + 0.3) * 0.6;
+  vec3 tomato = vec3(0.2, 0.0, 0.0);
+  vec3 cheese = vec3(0.5, 0.5, 0.2) * (noise(p * 0.5 + 1.0) * 0.3 + 0.5);
+
+  float d = sd_circle(p, 0.28);
+  c = mix(border, c, step(0, d));
+  c = mix(tomato, c, smoothstep(-0.08, -0.03, d) * 0.9 + 0.1);
+  c = mix(cheese, c, smoothstep(-0.10, -0.06, d));
+
+  c = c_border(p, c, d);
+  return c;
+}
+
 vec4 cow_ears(vec2 p, vec3 c) {
   p.y += 0.13;
   p.x = abs(p.x) - 0.25;
@@ -985,7 +1010,6 @@ vec4 cow_ears(vec2 p, vec3 c) {
   c = mix(vec3(0), c, smoothstep(0, 0.01, d));
   return vec4(c, d);
 }
-
 vec3 cow(vec2 p, vec3 c) {
   p.y -= 0.03;
 
@@ -1067,7 +1091,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 43) return brazil(p, c);
   else if (spr == 44) return water(p, c); // TODO
   // else if (spr == 45) return bread(p, c); // TODO
-  // else if (spr == 46) return pizza(p, c); // TODO
+  else if (spr == 46) return pizza(p, c);
   else if (spr == 47) return italy(p, c);
   else return tbd(p, c); // Should not happen
 }
