@@ -988,15 +988,31 @@ vec3 moon(vec2 p, vec3 c) { // TODO: use this
   return c;
 }
 
+float pizza_pepper(vec2 p, float id, float sp) {
+  p = op_rot(p, sp * id);
+  p.x -= 0.1 + hash(vec2(id, sp)) * 0.06;
+  return sd_circle(p, 0.02 + sin(id) * 0.005);
+}
 vec3 pizza(vec2 p, vec3 c) {
   vec3 border = vec3(0.7, 0.6, 0.4) * noise(p + 0.3) * 0.6;
   vec3 tomato = vec3(0.2, 0.0, 0.0);
   vec3 cheese = vec3(0.5, 0.5, 0.2) * (noise(p * 0.5 + 1.0) * 0.3 + 0.5);
+  vec3 pepper = vec3(0.0, 0.2, 0.0);
+
+  vec2 id_sp = op_rep_polar(p, 3);
+  float id = id_sp.x;
+  vec2 pp = op_rot(p, id_sp.y * id);
+  float dp = sd_circle(pp - vec2(0.1 - id * 0.01, id * 0.02), 0.05 + id * 0.005);
+
+  id_sp = op_rep_polar(p, 7);
+  float dq = pizza_pepper(p, id_sp.x, id_sp.y);
 
   float d = sd_circle(p, 0.28);
   c = mix(border, c, step(0, d));
-  c = mix(tomato, c, smoothstep(-0.08, -0.03, d) * 0.9 + 0.1);
+  c = mix(tomato, c, smoothstep(-0.08, -0.03, d));
   c = mix(cheese, c, smoothstep(-0.10, -0.06, d));
+  c = mix(tomato, c, smoothstep(0, 0.01, dp));
+  c = mix(pepper, c, smoothstep(0, 0.01, dq));
 
   c = c_border(p, c, d);
   return c;
