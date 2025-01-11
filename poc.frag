@@ -24,6 +24,11 @@ vec4 op_rep(vec2 p) {
   vec2 r = p - s * id;
   return vec4(r, id);
 }
+vec2 op_rep_polar(vec2 p, int n) {
+  const float sp = 3.1415926535 * 2.0 / float(n);
+  float id = round(atan(p.y, p.x) / sp);
+  return vec2(id, sp);
+}
 
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
@@ -94,11 +99,10 @@ float wool_circle(vec2 p) {
   return sd_circle(p, 0.18);
 }
 vec3 wool(vec2 p, vec3 c) {
-  const float sp = 3.1415926535 * 2.0 / 3.0;
-  float an = atan(p.y, p.x);
-  float id = floor(an / sp);
-  float a1 = sp * (id + 0.0);
-  float a2 = sp * (id + 1.0);
+  vec2 id_sp = op_rep_polar(p, 3);
+  float id = id_sp.x;
+  float a1 = id_sp.y * (id_sp.x + 0.0);
+  float a2 = id_sp.y * (id_sp.x + 1.0);
   vec2 r1 = mat2(cos(a1), -sin(a1), sin(a1), cos(a1)) * p;
   vec2 r2 = mat2(cos(a2), -sin(a2), sin(a2), cos(a2)) * p;
 
@@ -875,11 +879,11 @@ vec3 beer(vec2 p, vec3 c) {
 vec3 ball(vec2 p, vec3 c) {
   vec3 cc;
 
-  const float sp = (3.1415926535 * 2.0) / 5.0;
+  vec2 id_sp = op_rep_polar(p, 5);
+  float sp = id_sp.y;
   const vec2 s1 = op_rot(vec2(1, 0), sp * 0.5);
   const vec2 s2 = op_rot(vec2(1, 0), sp * -0.5);
-  float id = round(atan(p.y, p.x) / sp);
-  vec2 pp = op_rot(p, sp * id);
+  vec2 pp = op_rot(p, sp * id_sp.x);
   float db = sd_box(pp, vec2(0.09));
   db = min(db, sd_segment(pp, vec2(0), s1));
   db = min(db, sd_segment(pp, vec2(0), s2));
