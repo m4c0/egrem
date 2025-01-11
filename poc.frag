@@ -30,6 +30,10 @@ vec2 op_rep_polar(vec2 p, int n) {
   return vec2(id, sp);
 }
 
+vec2 op_rot(vec2 p, float r) {
+  mat2 m = mat2(cos(r), -sin(r), sin(r), cos(r));
+  return m * p;
+}
 bool eq(vec2 a, vec2 b) { return length(abs(a - b)) < 0.01; }
 
 float smin(float a, float b, float k) {
@@ -100,13 +104,8 @@ float wool_circle(vec2 p) {
 }
 vec3 wool(vec2 p, vec3 c) {
   vec2 id_sp = op_rep_polar(p, 3);
-  float id = id_sp.x;
-  float a1 = id_sp.y * (id_sp.x + 0.0);
-  float a2 = id_sp.y * (id_sp.x + 1.0);
-  vec2 r1 = mat2(cos(a1), -sin(a1), sin(a1), cos(a1)) * p;
-  vec2 r2 = mat2(cos(a2), -sin(a2), sin(a2), cos(a2)) * p;
-
-  float d = min(wool_circle(r1), wool_circle(r2));
+  vec2 r = op_rot(p, id_sp.y * id_sp.x);
+  float d = wool_circle(r);
   c = mix(vec3(1.0, 0.9, 0.8), c, step(0, d));
   c = c_border(p, c, d);
   return c;
@@ -302,10 +301,6 @@ vec3 easteregg(vec2 p, vec3 c) {
   return c;
 }
 
-vec2 op_rot(vec2 p, float r) {
-  mat2 m = mat2(cos(r), -sin(r), sin(r), cos(r));
-  return m * p;
-}
 vec3 basket(vec2 p, vec3 c) {
   p.y *= -1;
 
