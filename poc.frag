@@ -977,7 +977,7 @@ vec3 water(vec2 p, vec3 c) {
   return c;
 }
 
-vec3 moon(vec2 p, vec3 c) { // TODO: use this
+vec3 moon(vec2 p, vec3 c) {
   vec3 cc = vec3(0.7, 0.6, 0.5);
   cc *= noise(p + 0.5) * 0.3 + 0.7;
 
@@ -1104,7 +1104,7 @@ vec3 non_locked_sprite(vec2 p, vec3 c, uint spr) {
   else if (spr == 41) return car(p, c);
   else if (spr == 42) return senna(p, c);
   else if (spr == 43) return brazil(p, c);
-  else if (spr == 44) return water(p, c); // TODO
+  else if (spr == 44) return water(p, c);
   // else if (spr == 45) return bread(p, c); // TODO
   else if (spr == 46) return pizza(p, c);
   else if (spr == 47) return italy(p, c);
