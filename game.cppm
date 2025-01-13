@@ -101,6 +101,8 @@ static constexpr auto g_domain = [] {
   // - outfit + tool? = some minecraft ref? tnt?
   // - foo + fan = fan of foo?
   // - root beer?
+  // - stars?
+  // - Einstein = germany + ???
 
   res.movers[b_sheep ][b_empty ] = spawn<b_wool>;
   res.movers[b_wool  ][b_wool  ] = merge<b_thread>;
@@ -146,7 +148,7 @@ static constexpr auto g_domain = [] {
   res.movers[b_wheat][b_shroom] = merge<b_beer>;
 
   res.movers[b_berlin][b_metal ] = merge<b_car>;    // TODO: makes sense?
-  res.movers[b_ball  ][b_outfit] = merge<b_brazil>;
+  res.movers[b_ball  ][b_outfit] = merge<b_brazil>; // TODO: makes sense?
   res.movers[b_car   ][b_brazil] = merge<b_senna>;
 
   res.movers[b_cheese][b_bread] = merge<b_pizza>; // TODO: makes sense?
