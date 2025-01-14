@@ -4,6 +4,7 @@
 #pragma leco portrait
 #pragma leco landscape
 
+import audio;
 import casein;
 import dotz;
 import game;
@@ -156,6 +157,9 @@ static void drag_end() {
   if (g_pc.drag_origin != nil && g_pc.selection != nil && g_pc.drag_origin != g_pc.selection) {
     game::drop(g_pc.drag_origin, g_pc.selection);
   }
+  // TODO: identify if that was a merge or a "cancel"
+  // audio::merge();
+  audio::drop();
   g_pc.drag_origin = nil;
   g_pc.drag_pos = nil;
   g_redraw_map();
@@ -172,6 +176,7 @@ struct init {
       g_pc.drag_origin = g_pc.selection;
       drag_move();
       g_redraw_map();
+      audio::take();
     });
     handle(MOUSE_MOVE, drag_move);
     handle(MOUSE_UP, drag_end);
@@ -183,6 +188,7 @@ struct init {
         g_pc.drag_origin = g_pc.selection;
         touch_started = false;
         g_redraw_map();
+        audio::take();
       }
       drag_move();
     });
