@@ -96,6 +96,20 @@ void thread::run() {
         .attachments {{
           vee::create_colour_attachment(pd, s),
           vee::create_colour_attachment(fmt, vee::image_layout_color_attachment_optimal),
+          vee::create_depth_attachment(),
+        }},
+        .subpasses {{
+          vee::create_subpass({
+            .colours {{
+              vee::create_attachment_ref(0, vee::image_layout_color_attachment_optimal),
+              vee::create_attachment_ref(1, vee::image_layout_color_attachment_optimal),
+            }},
+            .depth_stencil = create_attachment_ref(2, vee::image_layout_depth_stencil_attachment_optimal),
+          }),
+        }},
+        .dependencies {{
+          vee::create_colour_dependency(),
+          vee::create_depth_dependency(),
         }},
       });
       voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt };
