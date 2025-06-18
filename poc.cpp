@@ -10,8 +10,10 @@ import dotz;
 import game;
 import hai;
 import traits;
+import vapp;
 import vee;
 import voo;
+import wagen;
 
 // TODO: check if player is out of moves
 
@@ -78,23 +80,25 @@ static void update_grid(voo::h2l_image * img) {
   g_pc.grid_center = (right + left) / 2.0f - 0.5f;
 }
 
-struct thread : voo::casein_thread {
+struct thread : vapp {
   void run() override {
     voo::device_and_queue dq { "poc" };
     auto pd = dq.physical_device();
     auto s = dq.surface();
 
-    constexpr const auto fmt = vee::image_format_rgba_unorm;
+    constexpr const auto fmt = VK_FORMAT_R8G8B8A8_UNORM;
 
     while (!interrupted()) {
-      auto rp = vee::create_render_pass({{
-        vee::create_colour_attachment(pd, s),
-        vee::create_colour_attachment(fmt),
-      }});
+      auto rp = vee::create_render_pass({
+        .attachments {{
+          vee::create_colour_attachment(pd, s),
+          vee::create_colour_attachment(fmt, vee::image_layout_color_attachment_optimal),
+        }},
+      });
       voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt };
       voo::offscreen::host_buffer hbuf { pd, { 1, 1 } };
 
-      voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U, vee::image_format_rgba_uint };
+      voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U, VK_FORMAT_R8G8B8A8_UINT };
       grid.run_once();
       g_redraw_map = [&] { grid.run_once(); };
 
@@ -129,7 +133,9 @@ struct thread : voo::casein_thread {
           }};
           vee::cmd_push_vert_frag_constants(*scb, *pl, &g_pc);
           vee::cmd_bind_descriptor_set(*scb, *pl, 0, dset);
-          oqr.run(*scb, sw.extent());
+          vee::cmd_set_scissor(*scb, sw.extent());
+          vee::cmd_set_viewport(*scb, sw.extent());
+          oqr.run(*scb);
 
           int mx = casein::mouse_pos.x * casein::screen_scale_factor;
           int my = casein::mouse_pos.y * casein::screen_scale_factor;
