@@ -81,8 +81,11 @@ static void update_grid(voo::h2l_image * img) {
 }
 
 struct thread : vapp {
-  void run() override {
-    voo::device_and_queue dq { "poc" };
+  void run() override;
+} t;
+
+void thread::run() {
+  main_loop("poc", [this](auto & dq) {
     auto pd = dq.physical_device();
     auto s = dq.surface();
 
@@ -148,8 +151,8 @@ struct thread : vapp {
         else g_pc.selection = nil;
       });
     }
-  }
-} t;
+  });
+}
 
 static void drag_move() {
   if (g_pc.drag_origin == nil) {
