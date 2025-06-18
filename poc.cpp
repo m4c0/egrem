@@ -138,7 +138,7 @@ void thread::run() {
 
       extent_loop(dq.queue(), sw, [&] {
         sw.queue_one_time_submit(dq.queue(), [&](auto pcb) {
-          voo::cmd_render_pass scb {vee::render_pass_begin {
+          voo::cmd_render_pass::build(vee::render_pass_begin {
             .command_buffer = *pcb,
             .render_pass = *rp,
             .framebuffer = sw.framebuffer(),
@@ -147,14 +147,15 @@ void thread::run() {
               vee::clear_colour(0, 0, 0, 0),
               vee::clear_colour(0, 0, 0, 0),
             },
-          }};
-          vee::cmd_push_vert_frag_constants(*scb, *pl, &g_pc);
-          vee::cmd_bind_descriptor_set(*scb, *pl, 0, dset);
-          vee::cmd_set_scissor(*scb, sw.extent());
-          vee::cmd_set_viewport(*scb, sw.extent());
-          oqr.run(*scb);
+          }, [&](auto cb) {;
+            vee::cmd_push_vert_frag_constants(cb, *pl, &g_pc);
+            vee::cmd_bind_descriptor_set(cb, *pl, 0, dset);
+            vee::cmd_set_scissor(cb, sw.extent());
+            vee::cmd_set_viewport(cb, sw.extent());
+            oqr.run(cb);
+          });
 
-          vee::cmd_pipeline_barrier(*scb, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_HOST_BIT, {
+          vee::cmd_pipeline_barrier(*pcb, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_HOST_BIT, {
             .srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT,
             .dstAccessMask = VK_ACCESS_HOST_READ_BIT,
             .oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
@@ -164,7 +165,7 @@ void thread::run() {
 
           int mx = casein::mouse_pos.x * casein::screen_scale_factor;
           int my = casein::mouse_pos.y * casein::screen_scale_factor;
-          cbuf.cmd_copy_to_host(*scb, { mx, my }, { 1, 1 }, hbuf.buffer());
+          cbuf.cmd_copy_to_host(*pcb, { mx, my }, { 1, 1 }, hbuf.buffer());
         });
 
         auto mem = hbuf.map();
