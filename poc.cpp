@@ -112,7 +112,7 @@ void thread::run() {
           vee::create_depth_dependency(),
         }},
       });
-      voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt };
+      voo::offscreen::colour_buffer cbuf { pd, voo::extent_of(pd, s), fmt, VK_BUFFER_USAGE_TRANSFER_SRC_BIT };
       voo::offscreen::host_buffer hbuf { pd, { 1, 1 } };
 
       voo::updater<voo::h2l_image> grid { dq.queue(), update_grid, pd, 16U, 16U, VK_FORMAT_R8G8B8A8_UINT };
@@ -153,6 +153,14 @@ void thread::run() {
           vee::cmd_set_scissor(*scb, sw.extent());
           vee::cmd_set_viewport(*scb, sw.extent());
           oqr.run(*scb);
+
+          vee::cmd_pipeline_barrier(*scb, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_HOST_BIT, {
+            .srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT,
+            .dstAccessMask = VK_ACCESS_HOST_READ_BIT,
+            .oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+            .newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            .image = cbuf.image(),
+          });
 
           int mx = casein::mouse_pos.x * casein::screen_scale_factor;
           int my = casein::mouse_pos.y * casein::screen_scale_factor;
